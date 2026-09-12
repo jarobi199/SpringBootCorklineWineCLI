@@ -19,13 +19,13 @@ public class User {
         //No argument constructor
     }
 
-    public User(String name, String username, String password, Role role, int favoriteStockThreshold, int peakAlertLeadDays) {
+    public User(String name, String username, String password, Role role) {
         this.name = name;
         this.username = username;
         this.password = password;
         this.role = role;
-        this.favoriteStockThreshold = favoriteStockThreshold;
-        this.peakAlertLeadDays = peakAlertLeadDays;
+        this.favoriteStockThreshold = 2;
+        this.peakAlertLeadDays = 180;
     }
 
     public String getId() {
