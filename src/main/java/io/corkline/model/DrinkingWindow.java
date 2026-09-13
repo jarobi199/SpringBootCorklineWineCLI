@@ -1,4 +1,3 @@
 package io.corkline.model;
 
-public class DrinkingWindow {
-}
+public record DrinkingWindow(int peakStartYear, int peakEndYear) {}
