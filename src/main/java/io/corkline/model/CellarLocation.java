@@ -11,6 +11,7 @@ import java.util.List;
 public class CellarLocation {
     @Id
     private String id;
+    private String userId;
     private String description;
     private StorageType storageType;
     private int  capacity;
@@ -22,8 +23,8 @@ public class CellarLocation {
         //No argument constructor
     }
 
-    public CellarLocation(String description, StorageType storageType, int capacity, Range idealTemperatureC,
-                          Range idealHumidityPercent) {
+    public CellarLocation(String userId, String description, StorageType storageType, int capacity, Range idealTemperatureC, Range idealHumidityPercent) {
+        this.userId = userId;
         this.description = description;
         this.storageType = storageType;
         this.capacity = capacity;
@@ -38,6 +39,14 @@ public class CellarLocation {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getDescription() {
