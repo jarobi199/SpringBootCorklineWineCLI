@@ -5,6 +5,8 @@ import io.corkline.enums.BottleType;
 import io.corkline.enums.DosageLevel;
 import io.corkline.enums.ProductionMethod;
 
+import java.time.LocalDate;
+
 public class SparklingWine extends Bottle {
     private DosageLevel dosageLevel;
     private ProductionMethod productionMethod;
@@ -14,7 +16,7 @@ public class SparklingWine extends Bottle {
         //No argument constructor
     }
 
-    public SparklingWine(String userId, String locationId, String producer, String label, String vintageYear, int quantity, int bottleSize, int abv, double price, double purchaseDate,
+    public SparklingWine(String userId, String locationId, String producer, String label, String vintageYear, int quantity, int bottleSize, int abv, double price, LocalDate purchaseDate,
                          boolean isFavorite, BottleStatus status, String notes, DosageLevel dosageLevel, ProductionMethod productionMethod, boolean isVintage) {
         super(userId, locationId, producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate, isFavorite, status, notes);
         this.dosageLevel = dosageLevel;

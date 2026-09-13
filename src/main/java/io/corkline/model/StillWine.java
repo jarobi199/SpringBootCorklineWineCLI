@@ -5,6 +5,8 @@ import io.corkline.enums.BottleType;
 import io.corkline.enums.WineBodyStyle;
 import io.corkline.enums.WineColor;
 
+import java.time.LocalDate;
+
 public class StillWine extends Bottle {
     private String varietal;
     private String region;
@@ -16,7 +18,7 @@ public class StillWine extends Bottle {
         //No argument constructor
     }
 
-    public StillWine(String userId, String locationId, String producer, String label, String vintageYear, int quantity, int bottleSize, int abv, double price, double purchaseDate, boolean isFavorite,
+    public StillWine(String userId, String locationId, String producer, String label, String vintageYear, int quantity, int bottleSize, int abv, double price, LocalDate purchaseDate, boolean isFavorite,
                      BottleStatus status, String notes, String varietal, String region, WineColor wineColor, WineBodyStyle bodyStyle, int agingPotentialYears) {
         super(userId, locationId, producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate, isFavorite, status, notes);
         this.varietal = varietal;

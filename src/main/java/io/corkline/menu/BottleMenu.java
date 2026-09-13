@@ -1,0 +1,44 @@
+package io.corkline.menu;
+
+import io.corkline.interfaces.IMenu;
+import io.corkline.service.BottleService;
+import io.corkline.util.InputHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class BottleMenu implements IMenu {
+    @Autowired
+    private BottleService bottleService;
+
+    @Override
+    public void show() {
+        int choice;
+        do {
+            printOptions();
+            choice = InputHandler.getIntegerInput();
+            switch (choice) {
+                case 1 -> listBottles();
+            }
+        }
+        while (choice != 0);
+    }
+
+    public void listBottles() {
+        bottleService.displayBottles();
+    }
+
+    @Override
+    public void printOptions() {
+        System.out.println("[1] List all bottles");
+        System.out.println("[2] List favorites & low stock");
+        System.out.println("[3] Add bottle");
+        System.out.println("[4] View bottle detail");
+        System.out.println("[5] Edit bottle");
+        System.out.println("[6] Move bottle");
+        System.out.println("[7] Consume bottle");
+        System.out.println("[8] Delete bottle");
+        System.out.println("[0] Back");
+        System.out.println("Please make a selection:");
+    }
+}

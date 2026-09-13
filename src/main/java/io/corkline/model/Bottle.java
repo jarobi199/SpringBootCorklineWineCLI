@@ -5,6 +5,8 @@ import io.corkline.enums.BottleType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
+
 @Document(collection = "bottles")
 public abstract class Bottle {
     @Id
@@ -18,7 +20,7 @@ public abstract class Bottle {
     private int bottleSize;
     private int abv;
     private double price;
-    private double purchaseDate;
+    private LocalDate purchaseDate;
     private boolean isFavorite;
     private BottleStatus status;
     private String notes;
@@ -28,7 +30,7 @@ public abstract class Bottle {
     }
 
     public Bottle(String userId, String locationId, String producer, String label, String vintageYear, int quantity, int bottleSize, int abv,
-                  double price, double purchaseDate, boolean isFavorite, BottleStatus status, String notes) {
+                  double price, LocalDate purchaseDate, boolean isFavorite, BottleStatus status, String notes) {
         this.userId = userId;
         this.locationId = locationId;
         this.producer = producer;
@@ -124,11 +126,11 @@ public abstract class Bottle {
         this.price = price;
     }
 
-    public double getPurchaseDate() {
+    public LocalDate getPurchaseDate() {
         return purchaseDate;
     }
 
-    public void setPurchaseDate(double purchaseDate) {
+    public void setPurchaseDate(LocalDate purchaseDate) {
         this.purchaseDate = purchaseDate;
     }
 

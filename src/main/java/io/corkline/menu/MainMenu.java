@@ -14,6 +14,8 @@ public class MainMenu implements IMenu {
     @Autowired
     private SettingsMenu settingsMenu;
     @Autowired
+    private BottleMenu bottleMenu;
+    @Autowired
     private GoodbyeMenu goodbyeMenu;
 
     public void show() {
@@ -29,8 +31,9 @@ public class MainMenu implements IMenu {
             printOptions();
             choice = InputHandler.getIntegerInput();
             menu = switch (choice) {
-                case 0 -> goodbyeMenu;
+                case 1 -> bottleMenu;
                 case 6 -> settingsMenu;
+                case 0 -> goodbyeMenu;
                 default -> throw new IllegalStateException("Unexpected value: " + choice);
             };
             menu.show();
@@ -41,7 +44,7 @@ public class MainMenu implements IMenu {
     }
 
     public void printOptions() {
-        System.out.println("[1] Properties");
+        System.out.println("[1] Bottles");
         System.out.println("[2] Locations");
         System.out.println("[3] Tastings");
         System.out.println("[4] Reports");
