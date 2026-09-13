@@ -23,6 +23,9 @@ public abstract class Bottle {
     private BottleStatus status;
     private String notes;
 
+    public Bottle() {
+        //No argument constructor
+    }
 
     public Bottle(String userId, String locationId, String producer, String label, String vintageYear, int quantity, int bottleSize, int abv,
                   double price, double purchaseDate, boolean isFavorite, BottleStatus status, String notes) {
