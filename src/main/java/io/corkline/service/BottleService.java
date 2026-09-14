@@ -1,11 +1,7 @@
 package io.corkline.service;
 
 import io.corkline.authentication.SessionContext;
-import io.corkline.enums.BottleStatus;
-import io.corkline.enums.DosageLevel;
-import io.corkline.enums.ProductionMethod;
 import io.corkline.model.Bottle;
-import io.corkline.model.SparklingWine;
 import io.corkline.repository.BottleRepository;
 import io.corkline.util.InputHandler;
 import io.github.kusoroadeolu.clique.Clique;
@@ -14,7 +10,6 @@ import io.github.kusoroadeolu.clique.configuration.TableType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
