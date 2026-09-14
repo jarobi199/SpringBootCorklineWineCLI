@@ -1,7 +1,11 @@
 package io.corkline.service;
 
 import io.corkline.authentication.SessionContext;
+import io.corkline.enums.BottleStatus;
+import io.corkline.enums.DosageLevel;
+import io.corkline.enums.ProductionMethod;
 import io.corkline.model.Bottle;
+import io.corkline.model.SparklingWine;
 import io.corkline.repository.BottleRepository;
 import io.corkline.util.InputHandler;
 import io.github.kusoroadeolu.clique.Clique;
@@ -10,6 +14,7 @@ import io.github.kusoroadeolu.clique.configuration.TableType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -19,14 +24,17 @@ public class BottleService {
 
     public void displayBottles() {
         List<Bottle> bottles = bottleRepository.findByUserId(SessionContext.getUser().getId());
-        displayBottles(bottles);
+        displayBottles(bottles, false);
     }
 
     public void listFavoritesAndLowStock() {
-
+        List<Bottle> favorites = bottleRepository.findByUserIdAndIsFavorite(SessionContext.getUser().getId(), true);
+        //List<Bottle> favorites = List.of(new SparklingWine(SessionContext.getUser().getId(), "locationId", "Producer", "Label", "1970", 1, 100, 500, 99.99, LocalDate.now(),
+        //true, BottleStatus.IN_CELLAR, "These are some notes", DosageLevel.EXTRA_BRUT, ProductionMethod.CHARMAT, true));
+        displayBottles(favorites, true);
     }
 
-    private void displayBottles(List<Bottle> bottles) {
+    private void displayBottles(List<Bottle> bottles, boolean highlightFavoriteLowStock) {
         if(bottles.isEmpty()){
             System.out.println("No bottles found.");
         }
@@ -45,11 +53,21 @@ public class BottleService {
                             "[yellow, bold]PURCHASE DATE[/]"
                     );
             for (Bottle bottle : bottles) {
-                bottleTable.row(bottle.getProducer(), bottle.getLabel(), bottle.getVintageYear(), String.valueOf(bottle.getQuantity()), String.valueOf(bottle.getBottleSize()), String.valueOf(bottle.getAbv()),
+                String quantity = (highlightFavoriteLowStock) ? highlightIfLowStock(bottle) : String.valueOf(bottle.getQuantity());
+                bottleTable.row(bottle.getProducer(), bottle.getLabel(), bottle.getVintageYear(), quantity, String.valueOf(bottle.getBottleSize()), String.valueOf(bottle.getAbv()),
                         InputHandler.formatAsMoney(bottle.getPrice()), bottle.getPurchaseDate().toString());
             }
             bottleTable.render();
         }
+    }
+
+    private String highlightIfLowStock(Bottle bottle) {
+        String quantity = String.valueOf(bottle.getQuantity());
+        if(bottle.getQuantity() < SessionContext.getUser().getFavoriteStockThreshold()) {
+            quantity = "[red, bold]" + bottle.getQuantity() + "[/]";
+        }
+
+        return quantity;
     }
 
 }
