@@ -19,9 +19,14 @@ public class BottleMenu implements IMenu {
             choice = InputHandler.getIntegerInput();
             switch (choice) {
                 case 1 -> listBottles();
+                case 2 -> listFavoritesAndLowStock();
             }
         }
         while (choice != 0);
+    }
+
+    public void listFavoritesAndLowStock() {
+        bottleService.listFavoritesAndLowStock();
     }
 
     public void listBottles() {

@@ -19,6 +19,14 @@ public class BottleService {
 
     public void displayBottles() {
         List<Bottle> bottles = bottleRepository.findByUserId(SessionContext.getUser().getId());
+        displayBottles(bottles);
+    }
+
+    public void listFavoritesAndLowStock() {
+
+    }
+
+    private void displayBottles(List<Bottle> bottles) {
         if(bottles.isEmpty()){
             System.out.println("No bottles found.");
         }
