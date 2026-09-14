@@ -24,8 +24,6 @@ public class BottleService {
 
     public void listFavoritesAndLowStock() {
         List<Bottle> favorites = bottleRepository.findByUserIdAndIsFavorite(SessionContext.getUser().getId(), true);
-        //List<Bottle> favorites = List.of(new SparklingWine(SessionContext.getUser().getId(), "locationId", "Producer", "Label", "1970", 1, 100, 500, 99.99, LocalDate.now(),
-        //true, BottleStatus.IN_CELLAR, "These are some notes", DosageLevel.EXTRA_BRUT, ProductionMethod.CHARMAT, true));
         displayBottles(favorites, true);
     }
 

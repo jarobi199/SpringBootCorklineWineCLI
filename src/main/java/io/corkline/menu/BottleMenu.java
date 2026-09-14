@@ -20,9 +20,17 @@ public class BottleMenu implements IMenu {
             switch (choice) {
                 case 1 -> listBottles();
                 case 2 -> listFavoritesAndLowStock();
+                case 3 -> addBottle();
             }
         }
         while (choice != 0);
+    }
+
+    public void addBottle() {
+        /*System.out.println("Select the species type (RESIDENTIAL, COMMERCIAL, VACATION_RENTAL):");
+        PropertyType propertyType = PropertyType.valueOf(InputHandler.getStringInput().toUpperCase());
+        System.out.println("Enter the address of the property:");
+        String address = InputHandler.getStringInput();*/
     }
 
     public void listFavoritesAndLowStock() {
