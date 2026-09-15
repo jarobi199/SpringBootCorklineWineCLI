@@ -22,11 +22,16 @@ private CellarLocationService cellarLocationService;
             printOptions();
             choice = InputHandler.getIntegerInput();
             switch (choice) {
+                case 1 -> listAllCellarLocations();
                 case 2 -> addCellarLocation();
                 case 3 -> recordConditionReading();
             }
         }
         while (choice != 0);
+    }
+
+    public void listAllCellarLocations() {
+        cellarLocationService.displayCellarLocations();
     }
 
     public void recordConditionReading() {
