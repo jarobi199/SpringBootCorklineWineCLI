@@ -12,7 +12,7 @@ public class CellarLocation {
     @Id
     private String id;
     private String userId;
-    private String description;
+    private String name;
     private StorageType storageType;
     private int  capacity;
     private Range idealTemperatureC;
@@ -23,9 +23,9 @@ public class CellarLocation {
         //No argument constructor
     }
 
-    public CellarLocation(String userId, String description, StorageType storageType, int capacity, Range idealTemperatureC, Range idealHumidityPercent) {
+    public CellarLocation(String userId, String name, StorageType storageType, int capacity, Range idealTemperatureC, Range idealHumidityPercent) {
         this.userId = userId;
-        this.description = description;
+        this.name = name;
         this.storageType = storageType;
         this.capacity = capacity;
         this.idealTemperatureC = idealTemperatureC;
@@ -49,12 +49,12 @@ public class CellarLocation {
         this.userId = userId;
     }
 
-    public String getDescription() {
-        return description;
+    public String getName() {
+        return name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public StorageType getStorageType() {
