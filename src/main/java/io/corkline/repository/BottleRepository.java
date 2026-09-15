@@ -10,5 +10,6 @@ import java.util.List;;
 public interface BottleRepository extends MongoRepository<Bottle, String> {
     List<Bottle> findByUserId(String userId);
     List<Bottle>  findByUserIdAndIsFavorite(String userId, boolean isFavorite);
+    List<Bottle> findByLocationId(String locationId);
 }
 

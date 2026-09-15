@@ -2,9 +2,11 @@ package io.corkline.service;
 
 import io.corkline.authentication.SessionContext;
 import io.corkline.enums.StorageType;
+import io.corkline.model.Bottle;
 import io.corkline.model.CellarLocation;
 import io.corkline.model.ConditionReading;
 import io.corkline.model.Range;
+import io.corkline.repository.BottleRepository;
 import io.corkline.repository.CellarLocationRepository;
 import io.github.kusoroadeolu.clique.Clique;
 import io.github.kusoroadeolu.clique.components.Table;
@@ -13,12 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
 public class CellarLocationService {
     @Autowired
     private CellarLocationRepository cellarLocationRepository;
+    @Autowired
+    private BottleRepository bottleRepository;
 
     public void addCellarLocation(String description, StorageType storageType, int capacity, int minIdealTemp, int maxIdealTemp, int minIdealHumidity, int maxIdealHumidity) {
         Range idealTempRange = new Range(minIdealTemp, maxIdealTemp);
@@ -38,22 +43,46 @@ public class CellarLocationService {
     }
 
     public void displayCellarLocations() {
-        List<CellarLocation> cellarLocations = cellarLocationRepository.findByUserId(SessionContext.getUser().getId());
+        List<CellarLocation> cellarLocations = cellarLocationRepository.findByUserId(SessionContext.getUser().getId())
+                .stream().sorted(Comparator.comparing(CellarLocation::getName)).toList();
         if (cellarLocations.isEmpty()) {
             System.out.println("No locations found.");
-        } else {
+        }
+        else
+        {
             System.out.println("| CELLAR LOCATIONS |");
             Table cellarLocationsTable = Clique.table(TableType.BOX_DRAW)
                     .headers(
                             "[yellow, bold]NAME[/]",
                             "[yellow, bold]STORAGE TYPE[/]",
-                            "[yellow, bold]CAPACITY[/]",
+                            "[yellow, bold]CAPACITY USED[/]",
+                            "[yellow, bold]REMAINING CAPACITY[/]",
                             "[yellow, bold]TEMPERATURE[/]",
                             "[yellow, bold]HUMIDITY[/]"
                     );
-
+            for (CellarLocation cellarLocation : cellarLocations) {
+                int capacityUsed = bottleRepository.findByLocationId(cellarLocation.getId()).size();
+                ConditionReading conditionReading = cellarLocation.getReadings().stream().max(Comparator.comparing(ConditionReading::dateTime)).orElse(null);
+                String temperature = "N/A";
+                String humidity = "N/A";
+                if (conditionReading != null) {
+                    temperature = highlightOutOfRange(cellarLocation.getIdealTemperatureC(), conditionReading.temperatureC());
+                    humidity = highlightOutOfRange(cellarLocation.getIdealHumidityPercent(), conditionReading.humidityPercent());
+                }
+                cellarLocationsTable.row(cellarLocation.getName(), cellarLocation.getStorageType().name(), String.valueOf(capacityUsed),
+                        String.valueOf(cellarLocation.getCapacity() - capacityUsed), temperature, humidity);
+            }
             cellarLocationsTable.render();
         }
+    }
+
+    private String highlightOutOfRange(Range range, int value) {
+        String quantity = String.valueOf(value);
+        if(!range.contains(value)) {
+            quantity = "[red, bold]" + value + "[/]";
+        }
+
+        return quantity;
     }
 
 }
