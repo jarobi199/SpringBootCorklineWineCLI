@@ -25,9 +25,17 @@ private CellarLocationService cellarLocationService;
                 case 1 -> listAllCellarLocations();
                 case 2 -> addCellarLocation();
                 case 3 -> recordConditionReading();
+                case 4 -> viewLocationDetail();
             }
         }
         while (choice != 0);
+    }
+
+    public void viewLocationDetail() {
+        CellarLocation cellarLocation = listCellarLocationsAndSelect();
+        if (cellarLocation != null) {
+            cellarLocationService.viewLocationDetail(cellarLocation);
+        }
     }
 
     public void listAllCellarLocations() {

@@ -2,7 +2,6 @@ package io.corkline.service;
 
 import io.corkline.authentication.SessionContext;
 import io.corkline.enums.StorageType;
-import io.corkline.model.Bottle;
 import io.corkline.model.CellarLocation;
 import io.corkline.model.ConditionReading;
 import io.corkline.model.Range;
@@ -83,6 +82,39 @@ public class CellarLocationService {
         }
 
         return quantity;
+    }
+
+    public void viewLocationDetail(CellarLocation cellarLocation) {
+        System.out.println("| CELLAR LOCATIONS |");
+        Table cellarLocationsTable = Clique.table(TableType.BOX_DRAW)
+                .headers(
+                        "[yellow, bold]NAME[/]",
+                        "[yellow, bold]STORAGE TYPE[/]",
+                        "[yellow, bold]CAPACITY USED[/]",
+                        "[yellow, bold]REMAINING CAPACITY[/]",
+                        "[yellow, bold]IDEAL TEMPERATURE RANGE[/]",
+                        "[yellow, bold]CURRENT TEMPERATURE[/]",
+                        "[yellow, bold]IDEAL HUMIDITY RANGE[/]",
+                        "[yellow, bold]CURRENT HUMIDITY[/]"
+                );
+
+        int capacityUsed = bottleRepository.findByLocationId(cellarLocation.getId()).size();
+        ConditionReading conditionReading = cellarLocation.getReadings().stream().max(Comparator.comparing(ConditionReading::dateTime)).orElse(null);
+        String temperatureRange = "N/A";
+        String humidityRange = "N/A";
+        String currentTemperature = "N/A";
+        String currentHumidity = "N/A";
+        if (conditionReading != null) {
+            temperatureRange = cellarLocation.getIdealTemperatureC().min() + "C - " +  cellarLocation.getIdealTemperatureC().max() + "C";
+            currentTemperature = highlightOutOfRange(cellarLocation.getIdealTemperatureC(), conditionReading.temperatureC());
+            humidityRange = cellarLocation.getIdealHumidityPercent().min() + "% - " +  cellarLocation.getIdealHumidityPercent().max() + "%";
+            currentHumidity = highlightOutOfRange(cellarLocation.getIdealHumidityPercent(), conditionReading.humidityPercent());
+        }
+
+        cellarLocationsTable.row(cellarLocation.getName(), cellarLocation.getStorageType().name(), String.valueOf(capacityUsed),
+                String.valueOf(cellarLocation.getCapacity() - capacityUsed), temperatureRange, currentTemperature, humidityRange, currentHumidity);
+
+        cellarLocationsTable.render();
     }
 
 }
