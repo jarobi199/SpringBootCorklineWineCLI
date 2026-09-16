@@ -24,10 +24,10 @@ public class CellarLocationService {
     @Autowired
     private BottleRepository bottleRepository;
 
-    public void addCellarLocation(String description, StorageType storageType, int capacity, int minIdealTemp, int maxIdealTemp, int minIdealHumidity, int maxIdealHumidity) {
+    public void addCellarLocation(String name, StorageType storageType, int capacity, int minIdealTemp, int maxIdealTemp, int minIdealHumidity, int maxIdealHumidity) {
         Range idealTempRange = new Range(minIdealTemp, maxIdealTemp);
         Range idealHumidityRange = new Range(minIdealHumidity, maxIdealHumidity);
-        CellarLocation cellarLocation = new CellarLocation(SessionContext.getUser().getId(), description, storageType, capacity, idealTempRange, idealHumidityRange);
+        CellarLocation cellarLocation = new CellarLocation(SessionContext.getUser().getId(), name, storageType, capacity, idealTempRange, idealHumidityRange);
         cellarLocationRepository.save(cellarLocation);
     }
 
@@ -85,7 +85,7 @@ public class CellarLocationService {
     }
 
     public void viewLocationDetail(CellarLocation cellarLocation) {
-        System.out.println("| CELLAR LOCATIONS |");
+        System.out.println("| CELLAR LOCATION DETAIL |");
         Table cellarLocationsTable = Clique.table(TableType.BOX_DRAW)
                 .headers(
                         "[yellow, bold]NAME[/]",
@@ -117,4 +117,11 @@ public class CellarLocationService {
         cellarLocationsTable.render();
     }
 
+    public void editCellarLocation(CellarLocation cellarLocation, String name, int capacity, int minIdealTemp, int maxIdealTemp, int minIdealHumidity, int maxIdealHumidity) {
+        cellarLocation.setName(name);
+        cellarLocation.setCapacity(capacity);
+        cellarLocation.setIdealTemperatureC(new Range(minIdealTemp, maxIdealTemp));
+        cellarLocation.setIdealHumidityPercent(new Range(minIdealHumidity, maxIdealHumidity));
+        cellarLocationRepository.save(cellarLocation);
+    }
 }

@@ -26,10 +26,34 @@ private CellarLocationService cellarLocationService;
                 case 2 -> addCellarLocation();
                 case 3 -> recordConditionReading();
                 case 4 -> viewLocationDetail();
+                case 5 -> editLocation();
             }
         }
         while (choice != 0);
     }
+
+    public void editLocation() {
+        CellarLocation cellarLocation = listCellarLocationsAndSelect();
+        if (cellarLocation != null) {
+            System.out.println("Enter the new cellar name:");
+            String name = InputHandler.getStringInput();
+            System.out.println("Enter the new capacity:");
+            int capacity = InputHandler.getIntegerInput();
+            System.out.println("Enter the new minimum ideal temperature (C):");
+            int minIdealTemp = InputHandler.getIntegerInput();
+            System.out.println("Enter the new maximum ideal temperature (C):");
+            int maxIdealTemp = InputHandler.getIntegerInput();
+            System.out.println("Enter the new minimum ideal humidity percentage:");
+            int minIdealHumidity = InputHandler.getIntegerInput();
+            System.out.println("Enter the new maximum ideal humidity percentage:");
+            int maxIdealHumidity = InputHandler.getIntegerInput();
+
+            cellarLocationService.editCellarLocation(cellarLocation, name, capacity, minIdealTemp, maxIdealTemp, minIdealHumidity, maxIdealHumidity);
+            System.out.println("The cellar location has been updated successfully!\n");
+        }
+    }
+
+    //	Update name, capacity, and ideal ranges. Storage type is immutable once set.
 
     public void viewLocationDetail() {
         CellarLocation cellarLocation = listCellarLocationsAndSelect();
@@ -58,8 +82,8 @@ private CellarLocationService cellarLocationService;
     }
 
     public void addCellarLocation() {
-        System.out.println("Add cellar description:");
-        String description = InputHandler.getStringInput();
+        System.out.println("Add cellar name:");
+        String name = InputHandler.getStringInput();
         System.out.println("Select storage type (RACK, BIN, CASE, DISPLAY):");
         StorageType storageType = StorageType.valueOf(InputHandler.getStringInput().toUpperCase());
         System.out.println("Enter the capacity:");
@@ -73,7 +97,7 @@ private CellarLocationService cellarLocationService;
         System.out.println("Enter the maximum ideal humidity percentage:");
         int maxIdealHumidity = InputHandler.getIntegerInput();
 
-        cellarLocationService.addCellarLocation(description, storageType, capacity, minIdealTemp, maxIdealTemp, minIdealHumidity, maxIdealHumidity);
+        cellarLocationService.addCellarLocation(name, storageType, capacity, minIdealTemp, maxIdealTemp, minIdealHumidity, maxIdealHumidity);
         System.out.println("The cellar location has been successfully added!\n");
     }
 
