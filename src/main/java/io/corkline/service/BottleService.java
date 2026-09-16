@@ -3,7 +3,11 @@ package io.corkline.service;
 import io.corkline.authentication.SessionContext;
 import io.corkline.enums.BottleStatus;
 import io.corkline.enums.BottleType;
+import io.corkline.enums.WineBodyStyle;
+import io.corkline.enums.WineColor;
 import io.corkline.model.Bottle;
+import io.corkline.model.CellarLocation;
+import io.corkline.model.StillWine;
 import io.corkline.repository.BottleRepository;
 import io.corkline.util.InputHandler;
 import io.github.kusoroadeolu.clique.Clique;
@@ -12,6 +16,7 @@ import io.github.kusoroadeolu.clique.configuration.TableType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -78,4 +83,10 @@ public class BottleService {
         return quantity;
     }
 
+    public void addStillWineBottle(CellarLocation cellarLocation, String producer, String label, String vintageYear, int quantity, int bottleSize, int abv, double price, LocalDate purchaseDate,
+                                   boolean isFavorite, String notes, String varietal, String region, WineColor wineColor, WineBodyStyle wineBodyStyle, int agingPotentialYears) {
+        StillWine stillWine = new StillWine(SessionContext.getUser().getId(), cellarLocation.getId(), producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate,
+                isFavorite, BottleStatus.IN_CELLAR, notes, varietal, region, wineColor, wineBodyStyle, agingPotentialYears);
+        bottleRepository.save(stillWine);
+    }
 }

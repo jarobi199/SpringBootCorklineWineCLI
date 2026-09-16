@@ -1,7 +1,8 @@
 package io.corkline.menu;
 
-import io.corkline.enums.BottleStatus;
 import io.corkline.enums.BottleType;
+import io.corkline.enums.WineBodyStyle;
+import io.corkline.enums.WineColor;
 import io.corkline.interfaces.IMenu;
 import io.corkline.model.CellarLocation;
 import io.corkline.service.BottleService;
@@ -59,14 +60,36 @@ public class BottleMenu implements IMenu {
                 System.out.println("Enter the purchase date (YYYY-MM-DD):");
                 LocalDate purchaseDate = InputHandler.getDateInput();
                 System.out.println("Is this bottle a favorite? (Y/N):");
-                boolean hasParking = InputHandler.getBooleanInput();
-                System.out.println("Select the bottle status (IN_CELLAR, CONSUMED):");
-                BottleStatus status = BottleStatus.valueOf(InputHandler.getStringInput().toUpperCase());
+                boolean isFavorite = InputHandler.getBooleanInput();
                 System.out.println("Enter the notes:");
                 String notes = InputHandler.getStringInput();
-            }
-            else
-            {
+
+                switch (bottleType) {
+                    case STILL_WINE -> {
+                        System.out.println("Enter the varietal:");
+                        String varietal = InputHandler.getStringInput();
+                        System.out.println("Enter the region:");
+                        String region = InputHandler.getStringInput();
+                        System.out.println("Enter the wine color (RED, WHITE, ROSE):");
+                        WineColor wineColor = WineColor.valueOf(InputHandler.getStringInput().toUpperCase());
+                        System.out.println("Enter the wine body style (LIGHT, MEDIUM , FULL_BODIED):");
+                        WineBodyStyle wineBodyStyle = WineBodyStyle.valueOf(InputHandler.getStringInput().toUpperCase());
+                        System.out.println("Enter the aging potential years:");
+                        int agingPotentialYears = InputHandler.getIntegerInput();
+
+                        bottleService.addStillWineBottle(cellarLocation, producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate, isFavorite, notes, varietal, region, wineColor, wineBodyStyle, agingPotentialYears);
+                        System.out.println("The still wine bottle has been added successfully!");
+                    }
+                    case SPARKLING_WINE -> {
+
+                        System.out.println("The sparkling wine bottle has been added successfully!");
+                    }
+                    case SPIRIT -> {
+
+                        System.out.println("The spirit bottle has been added successfully!");
+                    }
+                }
+            } else {
                 System.out.println("The selected location does not have any capacity.");
             }
         }
