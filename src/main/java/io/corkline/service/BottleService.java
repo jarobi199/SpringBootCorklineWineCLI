@@ -1,6 +1,8 @@
 package io.corkline.service;
 
 import io.corkline.authentication.SessionContext;
+import io.corkline.enums.BottleStatus;
+import io.corkline.enums.BottleType;
 import io.corkline.model.Bottle;
 import io.corkline.repository.BottleRepository;
 import io.corkline.util.InputHandler;
@@ -10,6 +12,8 @@ import io.github.kusoroadeolu.clique.configuration.TableType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -17,8 +21,19 @@ public class BottleService {
 @Autowired
     private BottleRepository bottleRepository;
 
-    public void displayBottles() {
-        List<Bottle> bottles = bottleRepository.findByUserId(SessionContext.getUser().getId());
+    public void listBottles(int filter, String value) {
+        List<Bottle> bottles = new ArrayList<>();
+
+        switch (filter) {
+            case 1 -> bottles = bottleRepository.findByUserId(SessionContext.getUser().getId()).stream().sorted(Comparator.comparing(Bottle::getProducer)).toList();
+            case 2 -> bottles = bottleRepository.findByUserId(SessionContext.getUser().getId())
+                    .stream().filter(bottle -> bottle.getBottleType().equals(BottleType.valueOf(value.toUpperCase())))
+                    .sorted(Comparator.comparing(Bottle::getProducer)).toList();
+            case 3 -> bottles =  bottleRepository.findByUserId(SessionContext.getUser().getId())
+                    .stream().filter(bottle -> bottle.getStatus().equals(BottleStatus.valueOf(value.toUpperCase())))
+                    .sorted(Comparator.comparing(Bottle::getProducer)).toList();
+        }
+
         displayBottles(bottles, false);
     }
 

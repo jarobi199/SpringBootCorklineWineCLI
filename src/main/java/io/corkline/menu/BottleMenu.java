@@ -38,7 +38,23 @@ public class BottleMenu implements IMenu {
     }
 
     public void listBottles() {
-        bottleService.displayBottles();
+        System.out.println("Please select a filter:");
+        System.out.println("[1] No filter");
+        System.out.println("[2] Filter by type");
+        System.out.println("[3] Filter by status");
+        int filter = InputHandler.getIntegerInput();
+        String value = null;
+
+        if(filter == 2) {
+            System.out.println("Please enter the type of bottle that you would like to filter on (STILL_WINE, SPARKLING_WINE, SPIRIT):");
+            value = InputHandler.getStringInput();
+        }
+        else if(filter == 3) {
+            System.out.println("Please enter the status that you would like to filter on (IN_CELLAR, CONSUMED):");
+            value = InputHandler.getStringInput();
+        }
+
+        bottleService.listBottles(filter, value);
     }
 
     @Override
