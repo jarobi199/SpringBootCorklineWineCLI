@@ -1,7 +1,9 @@
 package io.corkline.service;
 
 import io.corkline.authentication.SessionContext;
+import io.corkline.enums.BottleStatus;
 import io.corkline.enums.StorageType;
+import io.corkline.model.Bottle;
 import io.corkline.model.CellarLocation;
 import io.corkline.model.ConditionReading;
 import io.corkline.model.Range;
@@ -123,5 +125,17 @@ public class CellarLocationService {
         cellarLocation.setIdealTemperatureC(new Range(minIdealTemp, maxIdealTemp));
         cellarLocation.setIdealHumidityPercent(new Range(minIdealHumidity, maxIdealHumidity));
         cellarLocationRepository.save(cellarLocation);
+    }
+
+    public void deleteLocation(CellarLocation cellarLocation) {
+        List<Bottle> bottles = bottleRepository.findByLocationId(cellarLocation.getId()).stream().filter(bottle -> BottleStatus.IN_CELLAR.equals(bottle.getStatus())).toList();
+        if (!bottles.isEmpty()) {
+            System.out.println("This location cannot be deleted because there are bottles in this cellar");
+        }
+        else
+        {
+            cellarLocationRepository.delete(cellarLocation);
+            System.out.println("This location has been successfully deleted!");
+        }
     }
 }

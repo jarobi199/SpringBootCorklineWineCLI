@@ -27,9 +27,21 @@ private CellarLocationService cellarLocationService;
                 case 3 -> recordConditionReading();
                 case 4 -> viewLocationDetail();
                 case 5 -> editLocation();
+                case 6 -> deleteLocation();
             }
         }
         while (choice != 0);
+    }
+
+    public void deleteLocation() {
+        CellarLocation cellarLocation = listCellarLocationsAndSelect();
+        if (cellarLocation != null) {
+            System.out.println("Are you sure that you want to delete this cellar location? (Y/N):");
+            boolean confirmDelete = InputHandler.getBooleanInput();
+            if (confirmDelete) {
+                cellarLocationService.deleteLocation(cellarLocation);
+            }
+        }
     }
 
     public void editLocation() {
