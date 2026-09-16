@@ -138,4 +138,14 @@ public class CellarLocationService {
             System.out.println("This location has been successfully deleted!");
         }
     }
+
+    public boolean hasLocations() {
+        return !cellarLocationRepository.findByUserId(SessionContext.getUser().getId()).isEmpty();
+
+    }
+
+    public boolean hasCapacity(CellarLocation cellarLocation) {
+        int bottlesInCellar = bottleRepository.findByLocationId(cellarLocation.getId()).size();
+        return bottlesInCellar < cellarLocation.getCapacity();
+    }
 }

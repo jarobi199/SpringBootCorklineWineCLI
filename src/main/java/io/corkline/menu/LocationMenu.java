@@ -65,8 +65,6 @@ private CellarLocationService cellarLocationService;
         }
     }
 
-    //	Update name, capacity, and ideal ranges. Storage type is immutable once set.
-
     public void viewLocationDetail() {
         CellarLocation cellarLocation = listCellarLocationsAndSelect();
         if (cellarLocation != null) {
@@ -113,7 +111,7 @@ private CellarLocationService cellarLocationService;
         System.out.println("The cellar location has been successfully added!\n");
     }
 
-    private CellarLocation listCellarLocationsAndSelect() {
+    public CellarLocation listCellarLocationsAndSelect() {
         int number = 1;
         CellarLocation cellarLocation = null;
         int choice = 0;

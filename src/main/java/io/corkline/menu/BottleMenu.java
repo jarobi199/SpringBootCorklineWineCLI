@@ -1,15 +1,25 @@
 package io.corkline.menu;
 
+import io.corkline.enums.BottleStatus;
+import io.corkline.enums.BottleType;
 import io.corkline.interfaces.IMenu;
+import io.corkline.model.CellarLocation;
 import io.corkline.service.BottleService;
+import io.corkline.service.CellarLocationService;
 import io.corkline.util.InputHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
 
 @Component
 public class BottleMenu implements IMenu {
     @Autowired
     private BottleService bottleService;
+    @Autowired
+    private CellarLocationService cellarLocationService;
+    @Autowired
+    private LocationMenu locationMenu;
 
     @Override
     public void show() {
@@ -27,10 +37,45 @@ public class BottleMenu implements IMenu {
     }
 
     public void addBottle() {
-        /*System.out.println("Select the species type (RESIDENTIAL, COMMERCIAL, VACATION_RENTAL):");
-        PropertyType propertyType = PropertyType.valueOf(InputHandler.getStringInput().toUpperCase());
-        System.out.println("Enter the address of the property:");
-        String address = InputHandler.getStringInput();*/
+        if(cellarLocationService.hasLocations()) {
+            CellarLocation cellarLocation = locationMenu.listCellarLocationsAndSelect();
+            if((cellarLocation != null) && (cellarLocationService.hasCapacity(cellarLocation))) {
+                System.out.println("Select the bottle type (STILL_WINE, SPARKLING_WINE, SPIRIT):");
+                BottleType bottleType = BottleType.valueOf(InputHandler.getStringInput().toUpperCase());
+                System.out.println("Enter the producer:");
+                String producer = InputHandler.getStringInput();
+                System.out.println("Enter the label:");
+                String label = InputHandler.getStringInput();
+                System.out.println("Enter the vintage year:");
+                String vintageYear = InputHandler.getStringInput();
+                System.out.println("Enter the quantity:");
+                int quantity = InputHandler.getIntegerInput();
+                System.out.println("Enter the bottle size:");
+                int bottleSize = InputHandler.getIntegerInput();
+                System.out.println("Enter the alcohol by volume (abv):");
+                int abv = InputHandler.getIntegerInput();
+                System.out.println("Enter the price:");
+                double price = InputHandler.getIntegerInput();
+                System.out.println("Enter the purchase date (YYYY-MM-DD):");
+                LocalDate purchaseDate = InputHandler.getDateInput();
+                System.out.println("Is this bottle a favorite? (Y/N):");
+                boolean hasParking = InputHandler.getBooleanInput();
+                System.out.println("Select the bottle status (IN_CELLAR, CONSUMED):");
+                BottleStatus status = BottleStatus.valueOf(InputHandler.getStringInput().toUpperCase());
+                System.out.println("Enter the notes:");
+                String notes = InputHandler.getStringInput();
+            }
+            else
+            {
+                System.out.println("The selected location does not have any capacity.");
+            }
+        }
+        else
+        {
+            System.out.println("There is no locations in the database! You cannot add this bottle.");
+        }
+
+
     }
 
     public void listFavoritesAndLowStock() {
