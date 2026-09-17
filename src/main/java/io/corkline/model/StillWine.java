@@ -69,6 +69,16 @@ public class StillWine extends Bottle {
     }
 
     @Override
+    public String getDetails() {
+        return super.getDetails() +
+                "Varietal: " + varietal + "\n" +
+                "Region: " + region + "\n" +
+                "Wine Color: " + wineColor.name() + "\n" +
+                "Wine Body Style: " + bodyStyle.name() + "\n" +
+                "Aging Potential Years: " + agingPotentialYears + "\n";
+    }
+
+    @Override
     public DrinkingWindow calculateDrinkingWindow() {
         return null;
     }

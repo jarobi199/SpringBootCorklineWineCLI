@@ -57,6 +57,14 @@ public class SparklingWine extends Bottle {
     }
 
     @Override
+    public String getDetails() {
+        return super.getDetails() +
+                "Dosage Level: " + dosageLevel +
+                "Production Method: " + productionMethod +
+                "Vintage? : " + (isVintage ? "Yes" : "No") + "\n";
+    }
+
+    @Override
     public DrinkingWindow calculateDrinkingWindow() {
         return null;
     }

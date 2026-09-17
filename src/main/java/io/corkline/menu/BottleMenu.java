@@ -46,6 +46,7 @@ public class BottleMenu implements IMenu {
         if (bottle != null) {
             System.out.println("| BOTTLE DETAILS |");
             System.out.println(bottle.getDetails());
+            //TODO: Add tasting log code
         }
     }
 

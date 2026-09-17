@@ -58,6 +58,14 @@ public class Spirit extends Bottle {
     }
 
     @Override
+    public String getDetails() {
+        return super.getDetails() +
+                "Aged Years: " + agedYears +
+                "Cask Strength: " + caskStrength +
+                "Distillation Year: " + distillationYear + "\n";
+    }
+
+    @Override
     public DrinkingWindow calculateDrinkingWindow() {
         return null;
     }

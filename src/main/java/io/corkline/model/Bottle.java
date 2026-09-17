@@ -160,18 +160,19 @@ public abstract class Bottle {
     }
     
     public String getDetails() {
-        return 
+        return
                 "Producer: " + producer + "\n" +
-                "Label: " + label + "\n" +
-                "Vintage Year: " + vintageYear  + "\n" +
-                "Quantity: " + quantity  + "\n" +
-                "Bottle Size: "  + bottleSize   + "\n" +
-                "Alcohol By Volume (ABV): "  + abv  + "\n" +
-                "Price: "  + InputHandler.formatAsMoney(price) + "\n" +
-                "Purchase Date: "  + purchaseDate  + "\n" +
-                "Is Favorite?: "  + (isFavorite ? "Yes" : "No")  + "\n" +
-                "Status: "  + status  + "\n" +
-                "Notes: " + notes  + "\n";
+                        "Label: " + label + "\n" +
+                        "Vintage Year: " + vintageYear + "\n" +
+                        "Quantity: " + quantity + "\n" +
+                        "Bottle Size: " + bottleSize + "\n" +
+                        "Alcohol By Volume (ABV): " + abv + "\n" +
+                        "Price: " + InputHandler.formatAsMoney(price) + "\n" +
+                        "Purchase Date: " + purchaseDate + "\n" +
+                        "Is Favorite?: " + (isFavorite ? "Yes" : "No") + "\n" +
+                        "Status: " + status + "\n" +
+                        "Notes: " + notes + "\n";
+                        //TODO: Add drinking window code
     }
 
     public abstract DrinkingWindow calculateDrinkingWindow();
