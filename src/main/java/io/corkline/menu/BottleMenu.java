@@ -32,6 +32,7 @@ public class BottleMenu implements IMenu {
                 case 1 -> listBottles();
                 case 2 -> listFavoritesAndLowStock();
                 case 3 -> addBottle();
+                case 5 -> editBottle();
                 case 6 -> moveBottle();
                 case 7 -> consumeBottle();
             }
@@ -39,7 +40,45 @@ public class BottleMenu implements IMenu {
         while (choice != 0);
     }
 
+    public void editBottle() {
+        Bottle bottle = listBottlesAndSelect();
+        if (bottle != null) {
+            System.out.println("Enter the new quantity:");
+            int quantity = InputHandler.getIntegerInput();
+            System.out.println("Is this bottle a favorite? (Y/N):");
+            boolean isFavorite = InputHandler.getBooleanInput();
+            System.out.println("Enter the new notes:");
+            String notes = InputHandler.getStringInput();
+
+            switch (bottle.getBottleType()) {
+                case STILL_WINE -> {
+                    System.out.println("Enter the new aging potential years:");
+                    int agingPotentialYears = InputHandler.getIntegerInput();
+
+                    bottleService.editStillWineBottle(bottle, quantity, isFavorite, notes, agingPotentialYears);
+                    System.out.println("The still wine bottle has been updated successfully!");
+                }
+                case SPARKLING_WINE -> {
+                    System.out.println("Select the dosage level (BRUT_NATURE, EXTRA_BRUT, BRUT, SEC , DEMI_SEC):");
+                    DosageLevel dosageLevel = DosageLevel.valueOf(InputHandler.getStringInput().toUpperCase());
+
+                    bottleService.editSparklingWineBottle(bottle, quantity, isFavorite, notes, dosageLevel);
+                    System.out.println("The sparkling wine bottle has been updated successfully!");
+                }
+                case SPIRIT -> {
+                    System.out.println("Is this cask strength? (Y/N):");
+                    boolean caskStrength = InputHandler.getBooleanInput();
+
+                    bottleService.editSpiritBottle(bottle, quantity, isFavorite, notes, caskStrength);
+                    System.out.println("The spirit bottle has been updated successfully!");
+                }
+            }
+        }
+    }
+
+
     public void consumeBottle() {
+
         Bottle bottle = listBottlesAndSelect();
         System.out.println("Enter the number of bottles you want to consume:");
         int amount = InputHandler.getIntegerInput();
@@ -169,7 +208,7 @@ public class BottleMenu implements IMenu {
     private Bottle listBottlesAndSelect() {
         int number = 1;
         Bottle bottle = null;
-        int choice = 0;
+        int choice;
 
         List<Bottle> bottles = bottleService.getAllBottles();
 

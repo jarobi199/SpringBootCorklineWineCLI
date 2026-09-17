@@ -116,4 +116,35 @@ public class BottleService {
         
         bottleRepository.save(bottle);
     }
+
+    public void editStillWineBottle(Bottle bottle, int quantity, boolean isFavorite, String notes, int agingPotentialYears) {
+        StillWine stillWineBottle = (StillWine) bottle;
+        stillWineBottle.setQuantity(quantity);
+        stillWineBottle.setFavorite(isFavorite);
+        stillWineBottle.setNotes(notes);
+        stillWineBottle.setAgingPotentialYears(agingPotentialYears);
+
+        bottleRepository.save(stillWineBottle);
+    }
+
+    public void editSparklingWineBottle(Bottle bottle, int quantity, boolean isFavorite, String notes, DosageLevel dosageLevel) {
+        SparklingWine sparklingWineBottle = (SparklingWine) bottle;
+        sparklingWineBottle.setQuantity(quantity);
+        sparklingWineBottle.setFavorite(isFavorite);
+        sparklingWineBottle.setNotes(notes);
+        sparklingWineBottle.setDosageLevel(dosageLevel);
+
+        bottleRepository.save(sparklingWineBottle);
+    }
+
+    public void editSpiritBottle(Bottle bottle, int quantity, boolean isFavorite, String notes, boolean caskStrength) {
+        Spirit spiritBottle = (Spirit) bottle;
+        spiritBottle.setQuantity(quantity);
+        spiritBottle.setFavorite(isFavorite);
+        spiritBottle.setNotes(notes);
+        spiritBottle.setCaskStrength(caskStrength);
+
+        bottleRepository.save(spiritBottle);
+    }
+
 }
