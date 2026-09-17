@@ -110,6 +110,10 @@ public class BottleService {
 
     public void consumeBottles(Bottle bottle, int amount) {
         bottle.setQuantity(bottle.getQuantity() - amount);
+        if(bottle.getQuantity() == 0) {
+            bottle.setStatus(BottleStatus.CONSUMED);
+        }
+        
         bottleRepository.save(bottle);
     }
 }
