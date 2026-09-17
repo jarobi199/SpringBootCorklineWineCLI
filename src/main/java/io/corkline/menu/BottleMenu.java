@@ -32,12 +32,21 @@ public class BottleMenu implements IMenu {
                 case 1 -> listBottles();
                 case 2 -> listFavoritesAndLowStock();
                 case 3 -> addBottle();
+                case 4 -> viewBottleDetails();
                 case 5 -> editBottle();
                 case 6 -> moveBottle();
                 case 7 -> consumeBottle();
             }
         }
         while (choice != 0);
+    }
+
+    public void viewBottleDetails() {
+        Bottle bottle = listBottlesAndSelect();
+        if (bottle != null) {
+            System.out.println("| BOTTLE DETAILS |");
+            System.out.println(bottle.getDetails());
+        }
     }
 
     public void editBottle() {

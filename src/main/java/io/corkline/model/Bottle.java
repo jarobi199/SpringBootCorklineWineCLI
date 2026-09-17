@@ -2,6 +2,7 @@ package io.corkline.model;
 
 import io.corkline.enums.BottleStatus;
 import io.corkline.enums.BottleType;
+import io.corkline.util.InputHandler;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -156,6 +157,21 @@ public abstract class Bottle {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+    
+    public String getDetails() {
+        return 
+                "Producer: " + producer + "\n" +
+                "Label: " + label + "\n" +
+                "Vintage Year: " + vintageYear  + "\n" +
+                "Quantity: " + quantity  + "\n" +
+                "Bottle Size: "  + bottleSize   + "\n" +
+                "Alcohol By Volume (ABV): "  + abv  + "\n" +
+                "Price: "  + InputHandler.formatAsMoney(price) + "\n" +
+                "Purchase Date: "  + purchaseDate  + "\n" +
+                "Is Favorite?: "  + (isFavorite ? "Yes" : "No")  + "\n" +
+                "Status: "  + status  + "\n" +
+                "Notes: " + notes  + "\n";
     }
 
     public abstract DrinkingWindow calculateDrinkingWindow();
