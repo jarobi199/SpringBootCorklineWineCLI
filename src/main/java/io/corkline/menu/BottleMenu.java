@@ -1,9 +1,8 @@
 package io.corkline.menu;
 
-import io.corkline.enums.BottleType;
-import io.corkline.enums.WineBodyStyle;
-import io.corkline.enums.WineColor;
+import io.corkline.enums.*;
 import io.corkline.interfaces.IMenu;
+import io.corkline.model.Bottle;
 import io.corkline.model.CellarLocation;
 import io.corkline.service.BottleService;
 import io.corkline.service.CellarLocationService;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 public class BottleMenu implements IMenu {
@@ -32,9 +32,34 @@ public class BottleMenu implements IMenu {
                 case 1 -> listBottles();
                 case 2 -> listFavoritesAndLowStock();
                 case 3 -> addBottle();
+                case 6 -> moveBottle();
+                case 7 -> consumeBottle();
             }
         }
         while (choice != 0);
+    }
+
+    public void consumeBottle() {
+        Bottle bottle = listBottlesAndSelect();
+        System.out.println("Enter the number of bottles you want to consume:");
+        int amount = InputHandler.getIntegerInput();
+
+        bottleService.consumeBottles(bottle, amount);
+        System.out.println("You have consumed " +  amount + " bottle(s)!");
+    }
+
+    public void moveBottle() {
+        Bottle bottle = listBottlesAndSelect();
+        if (cellarLocationService.hasLocations()) {
+            CellarLocation cellarLocation = locationMenu.listCellarLocationsAndSelect();
+            if ((cellarLocation != null) && (cellarLocationService.hasCapacity(cellarLocation))) {
+                bottleService.moveBottle(cellarLocation, bottle);
+            }
+            else
+            {
+                System.out.println("The bottle cannot be moved because the selected location does not have any capacity.");
+            }
+        }
     }
 
     public void addBottle() {
@@ -81,15 +106,33 @@ public class BottleMenu implements IMenu {
                         System.out.println("The still wine bottle has been added successfully!");
                     }
                     case SPARKLING_WINE -> {
+                        System.out.println("Select the dosage level (BRUT_NATURE, EXTRA_BRUT, BRUT, SEC , DEMI_SEC):");
+                        DosageLevel dosageLevel = DosageLevel.valueOf(InputHandler.getStringInput().toUpperCase());
+                        System.out.println("Select the production method (TRADITIONAL, CHARMAT):");
+                        ProductionMethod productionMethod = ProductionMethod.valueOf(InputHandler.getStringInput().toUpperCase());
+                        System.out.println("Is this wine vintage? (Y/N):");
+                        boolean isVintage = InputHandler.getBooleanInput();
 
+                        bottleService.addSparklingWineBottle(cellarLocation, producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate, isFavorite, notes, dosageLevel, productionMethod, isVintage);
                         System.out.println("The sparkling wine bottle has been added successfully!");
                     }
                     case SPIRIT -> {
+                        System.out.println("Select the spirit type (WHISKEY, BRANDY, RUM, GIN, TEQUILA, OTHER):");
+                        SpiritType spiritType = SpiritType.valueOf(InputHandler.getStringInput().toUpperCase());
+                        System.out.println("Enter the distillation year:");
+                        String distillationYear = InputHandler.getStringInput();
+                        System.out.println("Is this cask strength? (Y/N):");
+                        boolean caskStrength = InputHandler.getBooleanInput();
+                        System.out.println("Enter the number of aged years:");
+                        int agedYears = InputHandler.getIntegerInput();
 
+                        bottleService.addSpiritBottle(cellarLocation, producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate, isFavorite, notes, spiritType, distillationYear, caskStrength, agedYears);
                         System.out.println("The spirit bottle has been added successfully!");
                     }
                 }
-            } else {
+            }
+            else
+            {
                 System.out.println("The selected location does not have any capacity.");
             }
         }
@@ -97,8 +140,6 @@ public class BottleMenu implements IMenu {
         {
             System.out.println("There is no locations in the database! You cannot add this bottle.");
         }
-
-
     }
 
     public void listFavoritesAndLowStock() {
@@ -125,6 +166,29 @@ public class BottleMenu implements IMenu {
         bottleService.listBottles(filter, value);
     }
 
+    private Bottle listBottlesAndSelect() {
+        int number = 1;
+        Bottle bottle = null;
+        int choice = 0;
+
+        List<Bottle> bottles = bottleService.getAllBottles();
+
+        if(!bottles.isEmpty()) {
+            for (Bottle b : bottles) {
+                System.out.println("[" + number + "] " +  b.getProducer() + " - " + b.getLabel());
+                number++;
+            }
+            System.out.println("Select a bottle:");
+            choice = InputHandler.getIntegerInput();
+            bottle = bottles.get(choice - 1);
+        }
+        else
+        {
+            System.out.println("There are no bottles available.");
+        }
+
+        return bottle;
+    }
     @Override
     public void printOptions() {
         System.out.println("[1] List all bottles");

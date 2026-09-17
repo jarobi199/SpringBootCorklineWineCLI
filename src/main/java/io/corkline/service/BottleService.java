@@ -1,13 +1,8 @@
 package io.corkline.service;
 
 import io.corkline.authentication.SessionContext;
-import io.corkline.enums.BottleStatus;
-import io.corkline.enums.BottleType;
-import io.corkline.enums.WineBodyStyle;
-import io.corkline.enums.WineColor;
-import io.corkline.model.Bottle;
-import io.corkline.model.CellarLocation;
-import io.corkline.model.StillWine;
+import io.corkline.enums.*;
+import io.corkline.model.*;
 import io.corkline.repository.BottleRepository;
 import io.corkline.util.InputHandler;
 import io.github.kusoroadeolu.clique.Clique;
@@ -40,6 +35,10 @@ public class BottleService {
         }
 
         displayBottles(bottles, false);
+    }
+
+    public List<Bottle> getAllBottles() {
+        return bottleRepository.findByUserId(SessionContext.getUser().getId());
     }
 
     public void listFavoritesAndLowStock() {
@@ -88,5 +87,29 @@ public class BottleService {
         StillWine stillWine = new StillWine(SessionContext.getUser().getId(), cellarLocation.getId(), producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate,
                 isFavorite, BottleStatus.IN_CELLAR, notes, varietal, region, wineColor, wineBodyStyle, agingPotentialYears);
         bottleRepository.save(stillWine);
+    }
+
+    public void addSparklingWineBottle(CellarLocation cellarLocation, String producer, String label, String vintageYear, int quantity,
+                                       int bottleSize, int abv, double price, LocalDate purchaseDate, boolean isFavorite, String notes, DosageLevel dosageLevel, ProductionMethod productionMethod, boolean isVintage) {
+        SparklingWine sparklingWine = new SparklingWine(SessionContext.getUser().getId(), cellarLocation.getId(), producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate,
+                isFavorite, BottleStatus.IN_CELLAR, notes, dosageLevel, productionMethod, isVintage);
+        bottleRepository.save(sparklingWine);
+    }
+
+    public void addSpiritBottle(CellarLocation cellarLocation, String producer, String label, String vintageYear, int quantity, int bottleSize, int abv,
+                                double price, LocalDate purchaseDate, boolean isFavorite, String notes, SpiritType spiritType, String distillationYear, boolean caskStrength, int agedYears) {
+        Spirit spirit = new Spirit(SessionContext.getUser().getId(), cellarLocation.getId(), producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate,
+                isFavorite, BottleStatus.IN_CELLAR, notes, spiritType, distillationYear, caskStrength, agedYears);
+        bottleRepository.save(spirit);
+    }
+
+    public void moveBottle(CellarLocation cellarLocation, Bottle bottle) {
+        bottle.setLocationId(cellarLocation.getId());
+        bottleRepository.save(bottle);
+    }
+
+    public void consumeBottles(Bottle bottle, int amount) {
+        bottle.setQuantity(bottle.getQuantity() - amount);
+        bottleRepository.save(bottle);
     }
 }
