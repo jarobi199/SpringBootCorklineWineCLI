@@ -60,8 +60,8 @@ public class Spirit extends Bottle {
     @Override
     public String getDetails() {
         return super.getDetails() +
-                "Aged Years: " + agedYears +
-                "Cask Strength: " + caskStrength +
+                "Aged Years: " + agedYears  + "\n" +
+                "Cask Strength: " + caskStrength  + "\n" +
                 "Distillation Year: " + distillationYear + "\n";
     }
 

@@ -226,7 +226,7 @@ public class BottleMenu implements IMenu {
         bottleService.listBottles(filter, value);
     }
 
-    private Bottle listBottlesAndSelect() {
+    public Bottle listBottlesAndSelect() {
         int number = 1;
         Bottle bottle = null;
         int choice;
@@ -249,6 +249,7 @@ public class BottleMenu implements IMenu {
 
         return bottle;
     }
+
     @Override
     public void printOptions() {
         System.out.println("[1] List all bottles");

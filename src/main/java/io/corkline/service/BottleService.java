@@ -152,7 +152,10 @@ public class BottleService {
     public void viewBottleDetails(Bottle bottle) {
         System.out.println("| BOTTLE DETAILS |");
         System.out.println(bottle.getDetails());
-        //TODO: Add tasting log code here
+        List<TastingLog> tastingLogs = tastingLogService.getAllTastingLogsByBottle(bottle);
+        if (!tastingLogs.isEmpty()) {
+            tastingLogService.displayTastingLogs(tastingLogs);
+        }
     }
 
     public void deleteBottle(Bottle bottle) {

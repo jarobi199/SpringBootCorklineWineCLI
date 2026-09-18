@@ -18,6 +18,8 @@ public class MainMenu implements IMenu {
     @Autowired
     private LocationMenu locationMenu;
     @Autowired
+    private TastingMenu tastingMenu;
+    @Autowired
     private GoodbyeMenu goodbyeMenu;
 
     public void show() {
@@ -35,6 +37,7 @@ public class MainMenu implements IMenu {
             menu = switch (choice) {
                 case 1 -> bottleMenu;
                 case 2 -> locationMenu;
+                case 3 -> tastingMenu;
                 case 6 -> settingsMenu;
                 case 0 -> goodbyeMenu;
                 default -> throw new IllegalStateException("Unexpected value: " + choice);
