@@ -36,17 +36,28 @@ public class BottleMenu implements IMenu {
                 case 5 -> editBottle();
                 case 6 -> moveBottle();
                 case 7 -> consumeBottle();
+                case 8 -> deleteBottle();
             }
         }
         while (choice != 0);
     }
 
+    public void deleteBottle() {
+        Bottle bottle = listBottlesAndSelect();
+        if (bottle != null) {
+            System.out.println("Are you sure that you want to delete this bottle? (Y/N):");
+            boolean confirmDelete = InputHandler.getBooleanInput();
+            if(confirmDelete) {
+                bottleService.deleteBottle(bottle);
+                System.out.println("Bottle has been deleted successfully!");
+            }
+        }
+    }
+
     public void viewBottleDetails() {
         Bottle bottle = listBottlesAndSelect();
         if (bottle != null) {
-            System.out.println("| BOTTLE DETAILS |");
-            System.out.println(bottle.getDetails());
-            //TODO: Add tasting log code
+            bottleService.viewBottleDetails(bottle);
         }
     }
 

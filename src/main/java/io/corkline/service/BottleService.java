@@ -18,8 +18,10 @@ import java.util.List;
 
 @Service
 public class BottleService {
-@Autowired
+    @Autowired
     private BottleRepository bottleRepository;
+    @Autowired
+    private TastingLogService tastingLogService;
 
     public void listBottles(int filter, String value) {
         List<Bottle> bottles = new ArrayList<>();
@@ -145,6 +147,17 @@ public class BottleService {
         spiritBottle.setCaskStrength(caskStrength);
 
         bottleRepository.save(spiritBottle);
+    }
+
+    public void viewBottleDetails(Bottle bottle) {
+        System.out.println("| BOTTLE DETAILS |");
+        System.out.println(bottle.getDetails());
+        //TODO: Add tasting log code here
+    }
+
+    public void deleteBottle(Bottle bottle) {
+        tastingLogService.deleteTastingLogsByBottleId(bottle.getId());
+        bottleRepository.delete(bottle);
     }
 
 }

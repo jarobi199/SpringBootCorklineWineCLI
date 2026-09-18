@@ -10,5 +10,6 @@ import java.util.List;;
 public interface TastingLogRepository extends MongoRepository<TastingLog, String> {
     List<TastingLog> findByUserId(String userId);
     List<TastingLog> findByUserIdOrderByTastingDateDesc(String userId);
+    List<TastingLog> findByBottleId(String bottleId);
 }
 
