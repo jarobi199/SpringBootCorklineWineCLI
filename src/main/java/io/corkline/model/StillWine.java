@@ -4,6 +4,9 @@ import io.corkline.enums.BottleStatus;
 import io.corkline.enums.BottleType;
 import io.corkline.enums.WineBodyStyle;
 import io.corkline.enums.WineColor;
+import io.corkline.interfaces.DrinkingWindowStrategy;
+import io.corkline.window.BellCurveWindowStrategy;
+import org.springframework.data.annotation.Transient;
 
 import java.time.LocalDate;
 
@@ -13,12 +16,14 @@ public class StillWine extends Bottle {
     private WineColor wineColor;
     private WineBodyStyle bodyStyle;
     private int agingPotentialYears;
+    @Transient
+    private DrinkingWindowStrategy<StillWine>  drinkingWindowStrategy;
 
     public StillWine() {
-        //No argument constructor
+        this.drinkingWindowStrategy = new BellCurveWindowStrategy();
     }
 
-    public StillWine(String userId, String locationId, String producer, String label, String vintageYear, int quantity, int bottleSize, int abv, double price, LocalDate purchaseDate, boolean isFavorite,
+    public StillWine(String userId, String locationId, String producer, String label, int vintageYear, int quantity, int bottleSize, int abv, double price, LocalDate purchaseDate, boolean isFavorite,
                      BottleStatus status, String notes, String varietal, String region, WineColor wineColor, WineBodyStyle bodyStyle, int agingPotentialYears) {
         super(userId, locationId, producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate, isFavorite, status, notes);
         this.varietal = varietal;
@@ -80,7 +85,7 @@ public class StillWine extends Bottle {
 
     @Override
     public DrinkingWindow calculateDrinkingWindow() {
-        return null;
+        return drinkingWindowStrategy.calculate(this);
     }
 
     @Override

@@ -4,6 +4,9 @@ import io.corkline.enums.BottleStatus;
 import io.corkline.enums.BottleType;
 import io.corkline.enums.DosageLevel;
 import io.corkline.enums.ProductionMethod;
+import io.corkline.interfaces.DrinkingWindowStrategy;
+import io.corkline.window.EarlyPeakWindowStrategy;
+import org.springframework.data.annotation.Transient;
 
 import java.time.LocalDate;
 
@@ -11,12 +14,14 @@ public class SparklingWine extends Bottle {
     private DosageLevel dosageLevel;
     private ProductionMethod productionMethod;
     private boolean isVintage;
+    @Transient
+    private DrinkingWindowStrategy<SparklingWine> drinkingWindowStrategy;
 
     public SparklingWine() {
-        //No argument constructor
+        this.drinkingWindowStrategy = new EarlyPeakWindowStrategy();
     }
 
-    public SparklingWine(String userId, String locationId, String producer, String label, String vintageYear, int quantity, int bottleSize, int abv, double price, LocalDate purchaseDate,
+    public SparklingWine(String userId, String locationId, String producer, String label, int vintageYear, int quantity, int bottleSize, int abv, double price, LocalDate purchaseDate,
                          boolean isFavorite, BottleStatus status, String notes, DosageLevel dosageLevel, ProductionMethod productionMethod, boolean isVintage) {
         super(userId, locationId, producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate, isFavorite, status, notes);
         this.dosageLevel = dosageLevel;
@@ -66,7 +71,7 @@ public class SparklingWine extends Bottle {
 
     @Override
     public DrinkingWindow calculateDrinkingWindow() {
-        return null;
+        return drinkingWindowStrategy.calculate(this);
     }
 
     @Override

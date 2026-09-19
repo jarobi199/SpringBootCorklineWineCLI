@@ -11,26 +11,26 @@ import java.time.LocalDate;
 @Document(collection = "bottles")
 public abstract class Bottle {
     @Id
-    private String id;
-    private String userId;
-    private String locationId;
-    private String producer;
-    private String label;
-    private String vintageYear;
-    private int quantity;
-    private int bottleSize;
-    private int abv;
-    private double price;
-    private LocalDate purchaseDate;
-    private boolean isFavorite;
-    private BottleStatus status;
-    private String notes;
+    protected String id;
+    protected String userId;
+    protected String locationId;
+    protected String producer;
+    protected String label;
+    protected int vintageYear;
+    protected int quantity;
+    protected int bottleSize;
+    protected int abv;
+    protected double price;
+    protected LocalDate purchaseDate;
+    protected boolean isFavorite;
+    protected BottleStatus status;
+    protected String notes;
 
     public Bottle() {
         //No argument constructor
     }
 
-    public Bottle(String userId, String locationId, String producer, String label, String vintageYear, int quantity, int bottleSize, int abv,
+    public Bottle(String userId, String locationId, String producer, String label, int vintageYear, int quantity, int bottleSize, int abv,
                   double price, LocalDate purchaseDate, boolean isFavorite, BottleStatus status, String notes) {
         this.userId = userId;
         this.locationId = locationId;
@@ -87,11 +87,11 @@ public abstract class Bottle {
         this.label = label;
     }
 
-    public String getVintageYear() {
+    public int getVintageYear() {
         return vintageYear;
     }
 
-    public void setVintageYear(String vintageYear) {
+    public void setVintageYear(int vintageYear) {
         this.vintageYear = vintageYear;
     }
 
@@ -171,8 +171,8 @@ public abstract class Bottle {
                         "Purchase Date: " + purchaseDate + "\n" +
                         "Is Favorite?: " + (isFavorite ? "Yes" : "No") + "\n" +
                         "Status: " + status + "\n" +
-                        "Notes: " + notes + "\n";
-                        //TODO: Add drinking window code
+                        "Notes: " + notes + "\n" +
+                        "Drinking Window: " + calculateDrinkingWindow().peakStartYear() + " - " + calculateDrinkingWindow().peakEndYear() + "\n";
     }
 
     public abstract DrinkingWindow calculateDrinkingWindow();

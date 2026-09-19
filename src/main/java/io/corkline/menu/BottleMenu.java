@@ -133,7 +133,7 @@ public class BottleMenu implements IMenu {
                 System.out.println("Enter the label:");
                 String label = InputHandler.getStringInput();
                 System.out.println("Enter the vintage year:");
-                String vintageYear = InputHandler.getStringInput();
+                int vintageYear = InputHandler.getIntegerInput();
                 System.out.println("Enter the quantity:");
                 int quantity = InputHandler.getIntegerInput();
                 System.out.println("Enter the bottle size:");

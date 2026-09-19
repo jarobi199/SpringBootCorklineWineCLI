@@ -90,6 +90,7 @@ public class TastingMenu implements IMenu {
         if(!tastingLogs.isEmpty()) {
             for (TastingLog t : tastingLogs) {
                 System.out.println("[" + number + "] " +  t.getBottleLabel() + " - " + t.getOccasion() + " ( " + t.getTastingDate() + ")");
+                number++;
             }
             System.out.println("Select a tasting log:");
             choice = InputHandler.getIntegerInput();
