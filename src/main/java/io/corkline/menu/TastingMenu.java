@@ -25,9 +25,14 @@ public class TastingMenu implements IMenu {
             switch (choice) {
                 case 1 -> logTasting();
                 case 2 -> viewHistoryByBottle();
+                case 3 -> viewAllTastings();
             }
         }
         while (choice != 0);
+    }
+
+    public void viewAllTastings() {
+        tastingLogService.viewAllTastingLogs();
     }
 
     public void viewHistoryByBottle() {

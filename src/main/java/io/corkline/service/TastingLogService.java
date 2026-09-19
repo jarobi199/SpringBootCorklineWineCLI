@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.OptionalDouble;
 
 @Service
@@ -63,6 +62,17 @@ public class TastingLogService {
             OptionalDouble averageDoubleOptional =  tastingLogs.stream().mapToInt(TastingLog::getRating).average();
             System.out.println("AVERAGE RATING: " + averageDoubleOptional.orElse(0));
             System.out.println();
+        }
+        else
+        {
+            System.out.println("There are no tasting logs to display");
+        }
+    }
+
+    public void viewAllTastingLogs() {
+        List<TastingLog>  tastingLogs = tastingLogRepository.findByUserIdOrderByTastingDateDesc(SessionContext.getUser().getId());
+        if (!tastingLogs.isEmpty()) {
+            displayTastingLogs(tastingLogs);
         }
         else
         {
