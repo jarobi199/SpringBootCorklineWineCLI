@@ -40,7 +40,6 @@ public class TastingLogService {
     }
 
     public void displayTastingLogs(List<TastingLog> tastingLogs) {
-        System.out.println("| TASTING LOGS |");
         Table tastingLogTable = Clique.table(TableType.BOX_DRAW)
                 .headers(
                         "[yellow, bold]BOTTLE LABEL[/]",
@@ -58,6 +57,7 @@ public class TastingLogService {
     public void viewHistoryByBottle(Bottle bottle) {
         List<TastingLog>  tastingLogs = tastingLogRepository.findByBottleId(bottle.getId()).stream().sorted(Comparator.comparing(TastingLog::getTastingDate).reversed()).toList();
         if (!tastingLogs.isEmpty()) {
+            System.out.println("| TASTING LOG HISTORY |");
             displayTastingLogs(tastingLogs);
             OptionalDouble averageDoubleOptional =  tastingLogs.stream().mapToInt(TastingLog::getRating).average();
             System.out.println("AVERAGE RATING: " + averageDoubleOptional.orElse(0));
@@ -72,6 +72,7 @@ public class TastingLogService {
     public void viewAllTastingLogs() {
         List<TastingLog>  tastingLogs = tastingLogRepository.findByUserIdOrderByTastingDateDesc(SessionContext.getUser().getId());
         if (!tastingLogs.isEmpty()) {
+            System.out.println("| TASTING LOGS |");
             displayTastingLogs(tastingLogs);
         }
         else
@@ -79,4 +80,21 @@ public class TastingLogService {
             System.out.println("There are no tasting logs to display");
         }
     }
+
+    public void viewTopRatedTastingLogs() {
+        List<TastingLog>  tastingLogs = tastingLogRepository.findByUserIdOrderByRatingDesc(SessionContext.getUser().getId());
+        if (!tastingLogs.isEmpty()) {
+            System.out.println("| TOP RATED TASTING LOGS |");
+            displayTastingLogs(tastingLogs);
+        }
+        else
+        {
+            System.out.println("There are no tasting logs to display");
+        }
+    }
+
+    public void deleteTastingLog(TastingLog tastingLog) {
+        tastingLogRepository.delete(tastingLog);
+    }
+
 }

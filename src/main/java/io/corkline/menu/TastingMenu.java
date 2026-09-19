@@ -2,12 +2,14 @@ package io.corkline.menu;
 
 import io.corkline.interfaces.IMenu;
 import io.corkline.model.Bottle;
+import io.corkline.model.TastingLog;
 import io.corkline.service.TastingLogService;
 import io.corkline.util.InputHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 public class TastingMenu implements IMenu {
@@ -26,9 +28,26 @@ public class TastingMenu implements IMenu {
                 case 1 -> logTasting();
                 case 2 -> viewHistoryByBottle();
                 case 3 -> viewAllTastings();
+                case 4 -> viewTopRated();
+                case 5 -> deleteTastingLog();
             }
         }
         while (choice != 0);
+    }
+
+    public void deleteTastingLog() {
+        Bottle bottle = bottleMenu.listBottlesAndSelect();
+        if (bottle != null) {
+            TastingLog tastingLog = listTastingLogsAndSelect(bottle);
+            if (tastingLog != null) {
+                tastingLogService.deleteTastingLog(tastingLog);
+                System.out.println("The tasting log has been successfully deleted!");
+            }
+        }
+    }
+
+    public void viewTopRated() {
+        tastingLogService.viewTopRatedTastingLogs();
     }
 
     public void viewAllTastings() {
@@ -59,6 +78,29 @@ public class TastingMenu implements IMenu {
             tastingLogService.logTasting(bottle, tastingDate, rating, notes,occasion, consumed);
             System.out.println("The tasting log has been logged successfully!");
         }
+    }
+
+    public TastingLog listTastingLogsAndSelect(Bottle bottle) {
+        int number = 1;
+        TastingLog tastingLog = null;
+        int choice;
+
+        List<TastingLog> tastingLogs = tastingLogService.getAllTastingLogsByBottle(bottle);
+
+        if(!tastingLogs.isEmpty()) {
+            for (TastingLog t : tastingLogs) {
+                System.out.println("[" + number + "] " +  t.getBottleLabel() + " - " + t.getOccasion() + " ( " + t.getTastingDate() + ")");
+            }
+            System.out.println("Select a tasting log:");
+            choice = InputHandler.getIntegerInput();
+            tastingLog = tastingLogs.get(choice - 1);
+        }
+        else
+        {
+            System.out.println("There are no tasting logs available.");
+        }
+
+        return tastingLog;
     }
 
     @Override
