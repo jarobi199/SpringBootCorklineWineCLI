@@ -99,7 +99,7 @@ public class BottleService {
     }
 
     public void addSpiritBottle(CellarLocation cellarLocation, String producer, String label, int vintageYear, int quantity, int bottleSize, int abv,
-                                double price, LocalDate purchaseDate, boolean isFavorite, String notes, SpiritType spiritType, String distillationYear, boolean caskStrength, int agedYears) {
+                                double price, LocalDate purchaseDate, boolean isFavorite, String notes, SpiritType spiritType, int distillationYear, boolean caskStrength, int agedYears) {
         Spirit spirit = new Spirit(SessionContext.getUser().getId(), cellarLocation.getId(), producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate,
                 isFavorite, BottleStatus.IN_CELLAR, notes, spiritType, distillationYear, caskStrength, agedYears);
         bottleRepository.save(spirit);

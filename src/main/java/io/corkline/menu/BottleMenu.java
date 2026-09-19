@@ -180,7 +180,7 @@ public class BottleMenu implements IMenu {
                         System.out.println("Select the spirit type (WHISKEY, BRANDY, RUM, GIN, TEQUILA, OTHER):");
                         SpiritType spiritType = SpiritType.valueOf(InputHandler.getStringInput().toUpperCase());
                         System.out.println("Enter the distillation year:");
-                        String distillationYear = InputHandler.getStringInput();
+                        int distillationYear = InputHandler.getIntegerInput();
                         System.out.println("Is this cask strength? (Y/N):");
                         boolean caskStrength = InputHandler.getBooleanInput();
                         System.out.println("Enter the number of aged years:");
