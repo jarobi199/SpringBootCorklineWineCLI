@@ -12,6 +12,8 @@ public class MainMenu implements IMenu {
     @Autowired
     private AuthenticateMenu authenticateMenu;
     @Autowired
+    private AlertMenu alertMenu;
+    @Autowired
     private SettingsMenu settingsMenu;
     @Autowired
     private BottleMenu bottleMenu;
@@ -38,6 +40,7 @@ public class MainMenu implements IMenu {
                 case 1 -> bottleMenu;
                 case 2 -> locationMenu;
                 case 3 -> tastingMenu;
+                case 5 -> alertMenu;
                 case 6 -> settingsMenu;
                 case 0 -> goodbyeMenu;
                 default -> throw new IllegalStateException("Unexpected value: " + choice);
