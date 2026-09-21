@@ -3,6 +3,8 @@ package io.corkline.service;
 import io.corkline.authentication.SessionContext;
 import io.corkline.enums.BottleType;
 import io.corkline.model.Bottle;
+import io.corkline.model.DrinkingWindow;
+import io.corkline.model.Range;
 import io.corkline.repository.BottleRepository;
 import io.corkline.util.BarChartUtil;
 import io.corkline.util.InputHandler;
@@ -11,6 +13,8 @@ import io.github.kusoroadeolu.clique.configuration.TableType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -54,6 +58,20 @@ public class ReportService {
     }
 
     public void generateDrinkingWindowReport(Bottle bottle) {
-
+        DrinkingWindow drinkingWindow = bottle.calculateDrinkingWindow();
+        long yearsUntilPeak = ChronoUnit.YEARS.between(LocalDate.now(), LocalDate.ofYearDay(drinkingWindow.peakStartYear(), 1));
+        System.out.println("| DRINKING WINDOW REPORT |");
+        Clique.table(TableType.BOX_DRAW)
+                .headers(
+                        "[yellow, bold]VINTAGE YEAR[/]",
+                        "[yellow, bold]PEAK WINDOW START[/]",
+                        "[yellow, bold]PEAK WINDOW END[/]",
+                        "[yellow, bold]STATUS[/]",
+                        "[yellow, bold]YEARS UNTIL PEAK[/]"
+                )
+                .row(String.valueOf(bottle.getVintageYear()), String.valueOf(drinkingWindow.peakStartYear()), String.valueOf(drinkingWindow.peakEndYear()), bottle.getStatus().name(),String.valueOf(yearsUntilPeak))
+                .render();
+        System.out.println();
     }
+
 }
