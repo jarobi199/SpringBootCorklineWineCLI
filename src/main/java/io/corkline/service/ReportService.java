@@ -52,4 +52,8 @@ public class ReportService {
         }
         barChart.render();
     }
+
+    public void generateDrinkingWindowReport(Bottle bottle) {
+
+    }
 }

@@ -1,6 +1,7 @@
 package io.corkline.menu;
 
 import io.corkline.interfaces.IMenu;
+import io.corkline.model.Bottle;
 import io.corkline.service.ReportService;
 import io.corkline.util.InputHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Component;
 public class ReportMenu implements IMenu {
     @Autowired
     private ReportService reportService;
+    @Autowired
+    private BottleMenu bottleMenu;
 
     @Override
     public void show() {
@@ -19,9 +22,17 @@ public class ReportMenu implements IMenu {
             choice = InputHandler.getIntegerInput();
             switch (choice) {
                 case 1 -> cellarSummary();
+                case 2 -> drinkingReportWindow();
             }
         }
         while (choice != 0);
+    }
+
+    public void drinkingReportWindow() {
+        Bottle bottle = bottleMenu.listBottlesAndSelect();
+        if (bottle != null) {
+            reportService.generateDrinkingWindowReport(bottle);
+        }
     }
 
     public void cellarSummary() {
