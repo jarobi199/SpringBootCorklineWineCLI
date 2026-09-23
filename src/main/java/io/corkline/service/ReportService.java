@@ -96,10 +96,12 @@ public class ReportService {
 
         producerTastings.sort(Comparator.comparing(ProducerTasting::averageRating).reversed());
 
-        //TODO: Add rest of code here
+        BarChartUtil.Builder barChart = BarChartUtil.builder().title("AVERAGE TASTING RATING BY PRODUCER").valueFormat("%.1f");
+        for (ProducerTasting producerTasting : producerTastings) {
+            barChart.bar(producerTasting.producer(), producerTasting.averageRating(), producerTasting.tastingCount() + " tastings");
+        }
+        barChart.render();
     }
-    //Tasting ratings by producer: Aggregated average rating grouped by producer, ranked descending,
-    // with tasting count per producer and an ASCII bar chart. Covers all logged tastings for the current user.
 
     private DrinkingWindowStatus getDrinkingWindowStatus(DrinkingWindow drinkingWindow) {
         DrinkingWindowStatus status = null;
