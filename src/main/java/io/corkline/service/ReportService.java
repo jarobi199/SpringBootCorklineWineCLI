@@ -86,11 +86,17 @@ public class ReportService {
     public void generateTastingRatingsByProducer() {
         List<ProducerTasting> producerTastings = new ArrayList<>();
         List<TastingLog> tastingLogs = tastingLogRepository.findByUserId(SessionContext.getUser().getId());
-        Set<String> producers = tastingLogs.stream().map(TastingLog::).collect(Collectors.toSet());
+        Set<String> producers = tastingLogs.stream().map(TastingLog::getBottleProducer).collect(Collectors.toSet());
         for (String producer : producers) {
-            int averageRating = bottles.stream().filter(bottle -> bottle.getProducer().equals(producer)).mapToInt(Bottle::)
+            List<TastingLog> tastingLogList = tastingLogs.stream().filter(tastingLog -> tastingLog.getBottleProducer().equals(producer)).toList();
+            int tastingLogCount = tastingLogList.size();
+            double averageRating = tastingLogList.stream().mapToInt(TastingLog::getRating).average().orElse(0.0);
+           producerTastings.add(new ProducerTasting(producer, averageRating, tastingLogCount));
         }
 
+        producerTastings.sort(Comparator.comparing(ProducerTasting::averageRating).reversed());
+
+        //TODO: Add rest of code here
     }
     //Tasting ratings by producer: Aggregated average rating grouped by producer, ranked descending,
     // with tasting count per producer and an ASCII bar chart. Covers all logged tastings for the current user.

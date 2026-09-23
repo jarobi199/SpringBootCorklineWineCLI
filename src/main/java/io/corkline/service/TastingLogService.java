@@ -32,7 +32,7 @@ public class TastingLogService {
     }
 
     public void logTasting(Bottle bottle, LocalDate tastingDate, int rating, String notes, String occasion, int consumed) {
-        TastingLog tastingLog = new TastingLog(bottle.getId(), SessionContext.getUser().getId(), bottle.getLabel(),  tastingDate, rating, notes, occasion, consumed);
+        TastingLog tastingLog = new TastingLog(bottle.getId(), SessionContext.getUser().getId(), bottle.getLabel(), bottle.getProducer(), tastingDate, rating, notes, occasion, consumed);
         tastingLogRepository.save(tastingLog);
 
         bottle.setQuantity(bottle.getQuantity() - consumed);
@@ -43,13 +43,14 @@ public class TastingLogService {
         Table tastingLogTable = Clique.table(TableType.BOX_DRAW)
                 .headers(
                         "[yellow, bold]BOTTLE LABEL[/]",
+                        "[yellow, bold]BOTTLE PRODUCER[/]",
                         "[yellow, bold]TASTING DATE[/]",
                         "[yellow, bold]RATING[/]",
                         "[yellow, bold]NOTES[/]",
                         "[yellow, bold]OCCASION[/]",
                         "[yellow, bold]QUANTITY CONSUMED[/]"
                 );
-        tastingLogs.forEach(tastingLog -> tastingLogTable.row(tastingLog.getBottleLabel(), tastingLog.getTastingDate().toString(), String.valueOf(tastingLog.getRating()),
+        tastingLogs.forEach(tastingLog -> tastingLogTable.row(tastingLog.getBottleLabel(), tastingLog.getBottleProducer(), tastingLog.getTastingDate().toString(), String.valueOf(tastingLog.getRating()),
                 tastingLog.getNotes(), tastingLog.getOccasion(), String.valueOf(tastingLog.getQuantityConsumed())));
         tastingLogTable.render();
     }

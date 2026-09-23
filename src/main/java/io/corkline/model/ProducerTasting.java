@@ -1,4 +1,4 @@
 package io.corkline.model;
 
-public record ProducerTasting(String producer, int averageRating, int tastingCount) {}
+public record ProducerTasting(String producer, double averageRating, int tastingCount) {}
 

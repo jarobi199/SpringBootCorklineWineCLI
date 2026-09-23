@@ -12,6 +12,7 @@ public class TastingLog {
     private String bottleId;
     private String userId;
     private String bottleLabel;
+    private String bottleProducer;
     private LocalDate tastingDate;
     private int rating;
     private String notes;
@@ -22,11 +23,12 @@ public class TastingLog {
         //No argument constructor
     }
 
-    public TastingLog(String bottleId, String userId, String bottleLabel, LocalDate tastingDate, int rating, String notes,
+    public TastingLog(String bottleId, String userId, String bottleLabel, String bottleProducer, LocalDate tastingDate, int rating, String notes,
                       String occasion, int quantityConsumed) {
         this.bottleId = bottleId;
         this.userId = userId;
         this.bottleLabel = bottleLabel;
+        this.bottleProducer = bottleProducer;
         this.tastingDate = tastingDate;
         this.rating = rating;
         this.notes = notes;
@@ -64,6 +66,14 @@ public class TastingLog {
 
     public void setBottleLabel(String bottleLabel) {
         this.bottleLabel = bottleLabel;
+    }
+
+    public String getBottleProducer() {
+        return bottleProducer;
+    }
+
+    public void setBottleProducer(String bottleProducer) {
+        this.bottleProducer = bottleProducer;
     }
 
     public LocalDate getTastingDate() {
