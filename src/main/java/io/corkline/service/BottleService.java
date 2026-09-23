@@ -48,7 +48,7 @@ public class BottleService {
         displayBottles(favorites, true);
     }
 
-    private void displayBottles(List<Bottle> bottles, boolean highlightFavoriteLowStock) {
+    public void displayBottles(List<Bottle> bottles, boolean highlightFavoriteLowStock) {
         if(bottles.isEmpty()){
             System.out.println("No bottles found.");
         }

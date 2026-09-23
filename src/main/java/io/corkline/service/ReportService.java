@@ -5,6 +5,7 @@ import io.corkline.enums.BottleType;
 import io.corkline.enums.DrinkingWindowStatus;
 import io.corkline.model.*;
 import io.corkline.repository.BottleRepository;
+import io.corkline.repository.CellarLocationRepository;
 import io.corkline.repository.TastingLogRepository;
 import io.corkline.util.BarChartUtil;
 import io.corkline.util.InputHandler;
@@ -25,6 +26,10 @@ public class ReportService {
     private BottleRepository bottleRepository;
     @Autowired
     private TastingLogRepository tastingLogRepository;
+    @Autowired
+    private CellarLocationRepository cellarLocationRepository;
+    @Autowired
+    private BottleService bottleService;
 
     public void generateCellarSummary() {
         List<Bottle> bottles = bottleRepository.findByUserId(SessionContext.getUser().getId());
@@ -121,4 +126,23 @@ public class ReportService {
         return status;
     }
 
+    public void generateLowStockAndFavorites() {
+        List<Bottle> bottles = bottleRepository.findByUserId(SessionContext.getUser().getId()).stream()
+                .filter(bottle -> bottle.isFavorite() && (bottle.getQuantity() < SessionContext.getUser().getFavoriteStockThreshold())).sorted(Comparator.comparing(Bottle::getQuantity)).toList();
+        System.out.println("| LOW STOCK AND FAVORITES |");
+        bottleService.displayBottles(bottles, true);
+    }
+
+    public void generateStorageConditions() {
+        List<CellarLocation> cellarLocations = cellarLocationRepository.findByUserId(SessionContext.getUser().getId());
+      if(!cellarLocations.isEmpty()) {
+          for (CellarLocation cellarLocation : cellarLocations) {
+
+          }
+      }
+      else
+      {
+        System.out.println(" There are no cellar locations");
+      }
+    }
 }

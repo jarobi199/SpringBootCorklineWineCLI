@@ -24,9 +24,19 @@ public class ReportMenu implements IMenu {
                 case 1 -> cellarSummary();
                 case 2 -> drinkingReportWindow();
                 case 3 -> tastingRatingsByProducer();
+                case 4 -> lowStockAndFavorites();
+                case 5 -> storageConditions();
             }
         }
         while (choice != 0);
+    }
+
+    public void storageConditions() {
+        reportService.generateStorageConditions();
+    }
+
+    public void lowStockAndFavorites() {
+        reportService.generateLowStockAndFavorites();
     }
 
     public void tastingRatingsByProducer() {
