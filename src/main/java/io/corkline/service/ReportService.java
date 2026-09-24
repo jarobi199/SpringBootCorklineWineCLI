@@ -10,6 +10,7 @@ import io.corkline.repository.TastingLogRepository;
 import io.corkline.util.BarChartUtil;
 import io.corkline.util.InputHandler;
 import io.github.kusoroadeolu.clique.Clique;
+import io.github.kusoroadeolu.clique.components.Table;
 import io.github.kusoroadeolu.clique.configuration.TableType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,8 @@ public class ReportService {
     private CellarLocationRepository cellarLocationRepository;
     @Autowired
     private BottleService bottleService;
+    @Autowired
+    private CellarLocationService cellarLocationService;
 
     public void generateCellarSummary() {
         List<Bottle> bottles = bottleRepository.findByUserId(SessionContext.getUser().getId());
@@ -135,14 +138,38 @@ public class ReportService {
 
     public void generateStorageConditions() {
         List<CellarLocation> cellarLocations = cellarLocationRepository.findByUserId(SessionContext.getUser().getId());
-      if(!cellarLocations.isEmpty()) {
-          for (CellarLocation cellarLocation : cellarLocations) {
+        if (!cellarLocations.isEmpty()) {
+            System.out.println("| STORAGE CONDITIONS |");
+            Table cellarLocationsTable = Clique.table(TableType.BOX_DRAW)
+                    .headers(
+                            "[yellow, bold]NAME[/]",
+                            "[yellow, bold]STORAGE TYPE[/]",
+                            "[yellow, bold]IDEAL TEMPERATURE RANGE[/]",
+                            "[yellow, bold]CURRENT TEMPERATURE[/]",
+                            "[yellow, bold]IDEAL HUMIDITY RANGE[/]",
+                            "[yellow, bold]CURRENT HUMIDITY[/]"
+                    );
+            for (CellarLocation cellarLocation : cellarLocations) {
+                ConditionReading conditionReading = cellarLocation.getReadings().stream().max(Comparator.comparing(ConditionReading::dateTime)).orElse(null);
+                String temperatureRange = "N/A";
+                String humidityRange = "N/A";
+                String currentTemperature = "N/A";
+                String currentHumidity = "N/A";
+                if (conditionReading != null) {
+                    temperatureRange = cellarLocation.getIdealTemperatureC().min() + "C - " + cellarLocation.getIdealTemperatureC().max() + "C";
+                    currentTemperature = cellarLocationService.highlightOutOfRange(cellarLocation.getIdealTemperatureC(), conditionReading.temperatureC());
+                    humidityRange = cellarLocation.getIdealHumidityPercent().min() + "% - " + cellarLocation.getIdealHumidityPercent().max() + "%";
+                    currentHumidity = cellarLocationService.highlightOutOfRange(cellarLocation.getIdealHumidityPercent(), conditionReading.humidityPercent());
+                }
 
-          }
-      }
-      else
-      {
-        System.out.println(" There are no cellar locations");
-      }
+                cellarLocationsTable.row(cellarLocation.getName(), cellarLocation.getStorageType().name(), temperatureRange, currentTemperature, humidityRange, currentHumidity);
+                cellarLocationsTable.render();
+            }
+        }
+        else
+        {
+            System.out.println(" There are no cellar locations");
+        }
     }
+
 }

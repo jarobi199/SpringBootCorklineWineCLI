@@ -77,7 +77,7 @@ public class CellarLocationService {
         }
     }
 
-    private String highlightOutOfRange(Range range, int value) {
+    public String highlightOutOfRange(Range range, int value) {
         String quantity = String.valueOf(value);
         if(!range.contains(value)) {
             quantity = "[red, bold]" + value + "[/]";
