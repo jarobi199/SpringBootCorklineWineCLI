@@ -77,7 +77,7 @@ public class InputHandler {
     // ----------------------------------------------------------------
 
     public static String getStringInput() {
-        return nextLine();
+        return nextLine().isEmpty() ? null : nextLine();
     }
 
     public static int getIntegerInput() {
