@@ -26,7 +26,7 @@ public class StorageConditionStrategy implements AlertStrategy {
     @Override
     public List<AlertResult> evaluate(Bottle bottle) {
         List<AlertResult> results = new ArrayList<>();
-        Optional<CellarLocation> cellarLocationOptional = cellarLocationRepository.findById(bottle.getId());
+        Optional<CellarLocation> cellarLocationOptional = cellarLocationRepository.findById(bottle.getLocationId());
         if (cellarLocationOptional.isPresent()) {
             CellarLocation cellarLocation = cellarLocationOptional.get();
             ConditionReading conditionReading = cellarLocation.getReadings().stream().max(Comparator.comparing(ConditionReading::dateTime)).orElse(null);

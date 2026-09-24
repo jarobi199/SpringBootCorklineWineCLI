@@ -112,21 +112,21 @@ public class ReportService {
     }
 
     private DrinkingWindowStatus getDrinkingWindowStatus(DrinkingWindow drinkingWindow) {
-        DrinkingWindowStatus status = null;
         LocalDate startPeak = LocalDate.ofYearDay(drinkingWindow.peakStartYear(), 1);
         LocalDate endPeak = LocalDate.ofYearDay(drinkingWindow.peakEndYear(), 1);
         LocalDate today = LocalDate.now();
+        LocalDate startAlerting = startPeak.minusDays(SessionContext.getUser().getPeakAlertLeadDays());
 
-        if(today.isAfter(endPeak)) {
-            status = DrinkingWindowStatus.PAST_PEAK;
+        if (today.isAfter(endPeak)) {
+            return DrinkingWindowStatus.PAST_PEAK;
         }
-        else if (today.isBefore(startPeak)) {
-            status = DrinkingWindowStatus.TOO_YOUNG;
+        if (!today.isBefore(startPeak)) {
+            return DrinkingWindowStatus.AT_PEAK;
         }
-        else if ((startPeak.isAfter(today)) && (today.isBefore(endPeak))) {
-            status = DrinkingWindowStatus.AT_PEAK;
+        if (!today.isBefore(startAlerting)) {
+            return DrinkingWindowStatus.APPROACHING_PEAK;
         }
-        return status;
+        return DrinkingWindowStatus.TOO_YOUNG;
     }
 
     public void generateLowStockAndFavorites() {
