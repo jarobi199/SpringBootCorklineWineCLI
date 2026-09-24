@@ -45,13 +45,13 @@ public class SettingsMenu implements IMenu {
 
     public void addUser() {
         if(verifyAdmin()) {
-            System.out.println("Enter your full name:");
+            System.out.println("Enter the full name:");
             String fullName = InputHandler.getStringInput();
-            System.out.println("Enter your username:");
+            System.out.println("Enter the username:");
             String username = InputHandler.getStringInput();
-            System.out.println("Enter your password:");
+            System.out.println("Enter the password:");
             String password = InputHandler.getStringInput();
-            System.out.println("Enter your role (ADMINISTRATOR, USER):");
+            System.out.println("Enter the role (ADMINISTRATOR, USER):");
             Role role = Role.valueOf(InputHandler.getStringInput().toUpperCase());
 
             userService.addUser(fullName, username, password, role);

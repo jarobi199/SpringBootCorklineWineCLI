@@ -163,8 +163,8 @@ public class ReportService {
                 }
 
                 cellarLocationsTable.row(cellarLocation.getName(), cellarLocation.getStorageType().name(), temperatureRange, currentTemperature, humidityRange, currentHumidity);
-                cellarLocationsTable.render();
             }
+            cellarLocationsTable.render();
         }
         else
         {
