@@ -21,7 +21,7 @@ public class SparklingWine extends Bottle {
         this.drinkingWindowStrategy = new EarlyPeakWindowStrategy();
     }
 
-    public SparklingWine(String userId, String locationId, String producer, String label, int vintageYear, int quantity, int bottleSize, int abv, double price, LocalDate purchaseDate,
+    public SparklingWine(String userId, String locationId, String producer, String label, int vintageYear, int quantity, int bottleSize, double abv, double price, LocalDate purchaseDate,
                          boolean isFavorite, BottleStatus status, String notes, DosageLevel dosageLevel, ProductionMethod productionMethod, boolean isVintage) {
         super(userId, locationId, producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate, isFavorite, status, notes);
         this.dosageLevel = dosageLevel;

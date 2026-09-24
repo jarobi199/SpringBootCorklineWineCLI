@@ -99,18 +99,19 @@ public class BottleMenu implements IMenu {
 
 
     public void consumeBottle() {
-
         Bottle bottle = listBottlesAndSelect();
-        System.out.println("Enter the number of bottles you want to consume:");
-        int amount = InputHandler.getIntegerInput();
+        if (bottle != null) {
+            System.out.println("Enter the number of bottles you want to consume:");
+            int amount = InputHandler.getIntegerInput();
 
-        bottleService.consumeBottles(bottle, amount);
-        System.out.println("You have consumed " +  amount + " bottle(s)!");
+            bottleService.consumeBottles(bottle, amount);
+            System.out.println("You have consumed " +  amount + " bottle(s)!");
+        }
     }
 
     public void moveBottle() {
         Bottle bottle = listBottlesAndSelect();
-        if (cellarLocationService.hasLocations()) {
+        if ((bottle != null) && cellarLocationService.hasLocations()){
             CellarLocation cellarLocation = locationMenu.listCellarLocationsAndSelect();
             if ((cellarLocation != null) && (cellarLocationService.hasCapacity(cellarLocation))) {
                 bottleService.moveBottle(cellarLocation, bottle);
@@ -139,9 +140,9 @@ public class BottleMenu implements IMenu {
                 System.out.println("Enter the bottle size:");
                 int bottleSize = InputHandler.getIntegerInput();
                 System.out.println("Enter the alcohol by volume (abv):");
-                int abv = InputHandler.getIntegerInput();
+                double abv = InputHandler.getDoubleInput();
                 System.out.println("Enter the price:");
-                double price = InputHandler.getIntegerInput();
+                double price = InputHandler.getDoubleInput();
                 System.out.println("Enter the purchase date (YYYY-MM-DD):");
                 LocalDate purchaseDate = InputHandler.getDateInput();
                 System.out.println("Is this bottle a favorite? (Y/N):");

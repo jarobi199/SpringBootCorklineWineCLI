@@ -77,14 +77,14 @@ public class BottleService {
 
     private String highlightIfLowStock(Bottle bottle) {
         String quantity = String.valueOf(bottle.getQuantity());
-        if(bottle.getQuantity() < SessionContext.getUser().getFavoriteStockThreshold()) {
+        if(bottle.getQuantity() <= SessionContext.getUser().getFavoriteStockThreshold()) {
             quantity = "[red, bold]" + bottle.getQuantity() + "[/]";
         }
 
         return quantity;
     }
 
-    public void addStillWineBottle(CellarLocation cellarLocation, String producer, String label, int vintageYear, int quantity, int bottleSize, int abv, double price, LocalDate purchaseDate,
+    public void addStillWineBottle(CellarLocation cellarLocation, String producer, String label, int vintageYear, int quantity, int bottleSize, double abv, double price, LocalDate purchaseDate,
                                    boolean isFavorite, String notes, String varietal, String region, WineColor wineColor, WineBodyStyle wineBodyStyle, int agingPotentialYears) {
         StillWine stillWine = new StillWine(SessionContext.getUser().getId(), cellarLocation.getId(), producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate,
                 isFavorite, BottleStatus.IN_CELLAR, notes, varietal, region, wineColor, wineBodyStyle, agingPotentialYears);
@@ -92,13 +92,13 @@ public class BottleService {
     }
 
     public void addSparklingWineBottle(CellarLocation cellarLocation, String producer, String label, int vintageYear, int quantity,
-                                       int bottleSize, int abv, double price, LocalDate purchaseDate, boolean isFavorite, String notes, DosageLevel dosageLevel, ProductionMethod productionMethod, boolean isVintage) {
+                                       int bottleSize, double abv, double price, LocalDate purchaseDate, boolean isFavorite, String notes, DosageLevel dosageLevel, ProductionMethod productionMethod, boolean isVintage) {
         SparklingWine sparklingWine = new SparklingWine(SessionContext.getUser().getId(), cellarLocation.getId(), producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate,
                 isFavorite, BottleStatus.IN_CELLAR, notes, dosageLevel, productionMethod, isVintage);
         bottleRepository.save(sparklingWine);
     }
 
-    public void addSpiritBottle(CellarLocation cellarLocation, String producer, String label, int vintageYear, int quantity, int bottleSize, int abv,
+    public void addSpiritBottle(CellarLocation cellarLocation, String producer, String label, int vintageYear, int quantity, int bottleSize, double abv,
                                 double price, LocalDate purchaseDate, boolean isFavorite, String notes, SpiritType spiritType, int distillationYear, boolean caskStrength, int agedYears) {
         Spirit spirit = new Spirit(SessionContext.getUser().getId(), cellarLocation.getId(), producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate,
                 isFavorite, BottleStatus.IN_CELLAR, notes, spiritType, distillationYear, caskStrength, agedYears);
@@ -111,11 +111,11 @@ public class BottleService {
     }
 
     public void consumeBottles(Bottle bottle, int amount) {
-        bottle.setQuantity(bottle.getQuantity() - amount);
+        bottle.setQuantity(Math.max((bottle.getQuantity() - amount), 0));
+
         if(bottle.getQuantity() == 0) {
             bottle.setStatus(BottleStatus.CONSUMED);
         }
-        
         bottleRepository.save(bottle);
     }
 

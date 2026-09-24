@@ -5,8 +5,6 @@ import io.corkline.util.InputHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.awt.*;
-
 @Component
 public class MainMenu implements IMenu {
     @Autowired

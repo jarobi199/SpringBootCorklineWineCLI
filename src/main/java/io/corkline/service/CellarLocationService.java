@@ -62,7 +62,7 @@ public class CellarLocationService {
                             "[yellow, bold]HUMIDITY[/]"
                     );
             for (CellarLocation cellarLocation : cellarLocations) {
-                int capacityUsed = bottleRepository.findByLocationId(cellarLocation.getId()).size();
+                int capacityUsed = bottleRepository.findByLocationId(cellarLocation.getId()).stream().filter(bottle -> BottleStatus.IN_CELLAR.equals(bottle.getStatus())).toList().size();
                 ConditionReading conditionReading = cellarLocation.getReadings().stream().max(Comparator.comparing(ConditionReading::dateTime)).orElse(null);
                 String temperature = "N/A";
                 String humidity = "N/A";
@@ -100,7 +100,7 @@ public class CellarLocationService {
                         "[yellow, bold]CURRENT HUMIDITY[/]"
                 );
 
-        int capacityUsed = bottleRepository.findByLocationId(cellarLocation.getId()).size();
+        int capacityUsed = bottleRepository.findByLocationId(cellarLocation.getId()).stream().filter(bottle -> BottleStatus.IN_CELLAR.equals(bottle.getStatus())).toList().size();
         ConditionReading conditionReading = cellarLocation.getReadings().stream().max(Comparator.comparing(ConditionReading::dateTime)).orElse(null);
         String temperatureRange = "N/A";
         String humidityRange = "N/A";
@@ -145,7 +145,7 @@ public class CellarLocationService {
     }
 
     public boolean hasCapacity(CellarLocation cellarLocation) {
-        int bottlesInCellar = bottleRepository.findByLocationId(cellarLocation.getId()).size();
+        int bottlesInCellar = bottleRepository.findByLocationId(cellarLocation.getId()).stream().filter(bottle -> BottleStatus.IN_CELLAR.equals(bottle.getStatus())).toList().size();
         return bottlesInCellar < cellarLocation.getCapacity();
     }
 }

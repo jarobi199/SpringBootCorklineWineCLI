@@ -53,8 +53,6 @@ public class SettingsMenu implements IMenu {
             String password = InputHandler.getStringInput();
             System.out.println("Enter your role (ADMINISTRATOR, USER):");
             Role role = Role.valueOf(InputHandler.getStringInput().toUpperCase());
-            System.out .println("Enter the number of checkup grace days:");
-            int days = InputHandler.getIntegerInput();
 
             userService.addUser(fullName, username, password, role);
             System.out.println("Your user has been added!");

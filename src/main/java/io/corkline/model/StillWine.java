@@ -23,7 +23,7 @@ public class StillWine extends Bottle {
         this.drinkingWindowStrategy = new BellCurveWindowStrategy();
     }
 
-    public StillWine(String userId, String locationId, String producer, String label, int vintageYear, int quantity, int bottleSize, int abv, double price, LocalDate purchaseDate, boolean isFavorite,
+    public StillWine(String userId, String locationId, String producer, String label, int vintageYear, int quantity, int bottleSize, double abv, double price, LocalDate purchaseDate, boolean isFavorite,
                      BottleStatus status, String notes, String varietal, String region, WineColor wineColor, WineBodyStyle bodyStyle, int agingPotentialYears) {
         super(userId, locationId, producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate, isFavorite, status, notes);
         this.varietal = varietal;

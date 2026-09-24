@@ -21,7 +21,7 @@ public class Spirit extends Bottle {
         this.drinkingWindowStrategy = new StableWindowStrategy();
     }
 
-    public Spirit(String userId, String locationId, String producer, String label, int vintageYear, int quantity, int bottleSize, int abv, double price, LocalDate purchaseDate,
+    public Spirit(String userId, String locationId, String producer, String label, int vintageYear, int quantity, int bottleSize, double abv, double price, LocalDate purchaseDate,
                   boolean isFavorite, BottleStatus status, String notes, SpiritType spiritType, int distillationYear, boolean caskStrength, int agedYears) {
         super(userId, locationId, producer, label, vintageYear, quantity, bottleSize, abv, price, purchaseDate, isFavorite, status, notes);
         this.spiritType = spiritType;

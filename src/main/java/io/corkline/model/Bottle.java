@@ -19,7 +19,7 @@ public abstract class Bottle {
     protected int vintageYear;
     protected int quantity;
     protected int bottleSize;
-    protected int abv;
+    protected double abv;
     protected double price;
     protected LocalDate purchaseDate;
     protected boolean isFavorite;
@@ -30,7 +30,7 @@ public abstract class Bottle {
         //No argument constructor
     }
 
-    public Bottle(String userId, String locationId, String producer, String label, int vintageYear, int quantity, int bottleSize, int abv,
+    public Bottle(String userId, String locationId, String producer, String label, int vintageYear, int quantity, int bottleSize, double abv,
                   double price, LocalDate purchaseDate, boolean isFavorite, BottleStatus status, String notes) {
         this.userId = userId;
         this.locationId = locationId;
@@ -111,11 +111,11 @@ public abstract class Bottle {
         this.bottleSize = bottleSize;
     }
 
-    public int getAbv() {
+    public double getAbv() {
         return abv;
     }
 
-    public void setAbv(int abv) {
+    public void setAbv(double abv) {
         this.abv = abv;
     }
 
