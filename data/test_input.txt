@@ -2,14 +2,29 @@
 # Corkline Wine & Spirits Cellar Manager -- test_input.txt
 # ==================================================================
 # Set InputHandler.DEBUG = true and point DEBUG_FILE at this file's
-# location before running.
+# location before running. Assumes the seeded user kanto / password
+# already exists (confirmed).
 #
-# ASSUMES a seeded admin user "kanto" / "password" already exists in
-# your users collection (see AuthenticateMenu.initialize() -- note
-# that method is never actually called at startup, so this user only
-# exists if you created it some other way). If your real user differs,
-# edit the two lines under TEST 1 below to match, or the login loop
-# will never succeed and will corrupt every line after it.
+# Data is deliberately engineered so all three currently-implemented
+# alerts fire unambiguously by the time the Alerts section runs:
+#   - PEAK_WINDOW_APPROACHING: Domaine Leroux and Chateau Reynard are
+#     both built so their peak window opens ~98 days from "today"
+#     (2026-09-25), inside the default 180-day lead time.
+#   - LOW_STOCK_FAVORITE: Maison Belliard is added at quantity 1,
+#     favorite = Y, and is never tasted/consumed afterward, so it
+#     can't accidentally get bumped to 0 and flip to CONSUMED.
+#   - STORAGE_CONDITION: Wine Rack A gets exactly one reading with
+#     BOTH temperature and humidity out of range (tests the "two
+#     distinct alerts for one location" case); Basement Cave gets
+#     exactly one reading with only humidity out of range. Cellar
+#     Fridge and Garage Overflow each get one healthy reading, for
+#     contrast. Each flagged location gets only ONE reading total,
+#     so there's no ambiguity about which reading is "most recent."
+#
+# Four real locations, five real bottles, five real tasting logs
+# survive to the end. One throwaway location, one throwaway bottle,
+# and one throwaway tasting log exercise the three Delete flows
+# without touching any of the real data above.
 #
 # Lines starting with # are comments, skipped by InputHandler.
 # "# --- TEST N ---" lines are also skipped but print a
@@ -30,7 +45,7 @@ password
 2
 Wine Rack A
 RACK
-10
+12
 11
 14
 60
@@ -41,49 +56,89 @@ RACK
 2
 Cellar Fridge
 DISPLAY
-5
+6
 12
 16
 55
 70
 
 # --- TEST 5 ---
-# Add cellar location #3: Temp Overflow Rack (throwaway, deleted later)
+# Add cellar location #3: Basement Cave
 2
-Temp Overflow Rack
+Basement Cave
 BIN
-4
+8
+10
+13
+65
+80
+
+# --- TEST 6 ---
+# Add cellar location #4: Garage Overflow
+2
+Garage Overflow
+CASE
+6
+13
+18
+50
+65
+
+# --- TEST 7 ---
+# Add cellar location #5: Temp Holding Bin (throwaway, deleted later)
+2
+Temp Holding Bin
+BIN
+3
 10
 15
 55
 70
 
-# --- TEST 6 ---
+# --- TEST 8 ---
 # List all cellar locations
 1
 
-# --- TEST 7 ---
-# Record condition reading on Wine Rack A (in range)
-3
-1
-13
-68
-Weekly check - all normal
-
-# --- TEST 8 ---
-# Record condition reading on Wine Rack A (out of range - should trip a Storage Condition alert)
+# --- TEST 9 ---
+# Record condition reading on Wine Rack A - BOTH temperature and humidity
+# out of range (ideal 11-14C / 60-75%)
 3
 1
 20
-68
-Heater malfunction overnight
+90
+Heater malfunction overnight, AC also seems to be failing
 
-# --- TEST 9 ---
+# --- TEST 10 ---
+# Record condition reading on Basement Cave - humidity only out of range
+# (ideal 10-13C / 65-80%)
+3
+3
+12
+40
+Dehumidifier running too aggressively
+
+# --- TEST 11 ---
+# Record condition reading on Cellar Fridge - in range (ideal 12-16C / 55-70%)
+3
+2
+14
+62
+Routine check, all normal
+
+# --- TEST 12 ---
+# Record condition reading on Garage Overflow - in range (ideal 13-18C / 50-65%)
+3
+4
+15
+58
+Routine check, all normal
+
+# --- TEST 13 ---
 # View location detail: Wine Rack A
 4
 1
 
-# --- TEST 10 ---
+# --- TEST 14 ---
 # Edit location: Cellar Fridge
 5
 2
@@ -94,69 +149,112 @@ Cellar Fridge (Upstairs)
 55
 70
 
-# --- TEST 11 ---
-# Delete cellar location: Temp Overflow Rack (throwaway, always last in the list)
+# --- TEST 15 ---
+# Delete cellar location: Temp Holding Bin (throwaway, always last in the list)
 6
-3
+5
 Y
 
-# --- TEST 12 ---
+# --- TEST 16 ---
 # Back to Main Menu
 0
 
-# --- TEST 13 ---
+# --- TEST 17 ---
 # Main Menu -> Bottles
 1
 
-# --- TEST 14 ---
-# Add bottle #1: Still wine - Domaine Leroux, Clos des Vignes 2018 (Wine Rack A)
+# --- TEST 18 ---
+# Add bottle #1: Still wine - Domaine Leroux, Clos des Vignes 2021 (Wine Rack A)
+# Vintage 2021 + aging potential 15yrs -> peak window opens 2027 (~98 days out)
 3
 1
 STILL_WINE
 Domaine Leroux
 Clos des Vignes
-2018
+2021
 6
 750
 14.5
 65.00
-2020-03-15
+2022-03-15
 N
 Cellar favorite - hold for a special occasion
 Cabernet Sauvignon
 Napa Valley
 RED
 FULL_BODIED
-12
+15
 
-# --- TEST 15 ---
-# Add bottle #2: Sparkling wine - Maison Belliard Brut NV (Wine Rack A)
+# --- TEST 19 ---
+# Add bottle #2: Still wine - Rosewood Ridge, Pinot Noir 2020 (Cellar Fridge)
+3
+2
+STILL_WINE
+Rosewood Ridge
+Pinot Noir
+2020
+4
+750
+13.2
+38.00
+2021-05-01
+N
+Bright and versatile, good with lighter fare
+Pinot Noir
+Willamette Valley
+RED
+MEDIUM
+8
+
+# --- TEST 20 ---
+# Add bottle #3: Sparkling wine - Maison Belliard Brut NV (Wine Rack A)
+# Quantity 1, favorite - guaranteed low-stock trigger, never tasted afterward
 3
 1
 SPARKLING_WINE
 Maison Belliard
 Brut
 0
-2
+1
 750
 12.0
 42.00
-2022-11-01
+2023-11-01
 Y
-Good for celebrations
+Down to the last bottle - reorder soon
 BRUT
 TRADITIONAL
 N
 
-# --- TEST 16 ---
-# Add bottle #3: Spirit - Glenmuir 12-Year Single Malt (Cellar Fridge)
+# --- TEST 21 ---
+# Add bottle #4: Sparkling wine - Chateau Reynard, Blanc de Blancs 2026 (Basement Cave)
+# Vintage-dated (isVintage=Y) -> peak window opens 2027 (~98 days out)
 3
-2
+3
+SPARKLING_WINE
+Chateau Reynard
+Blanc de Blancs
+2026
+3
+750
+12.5
+55.00
+2026-06-01
+N
+Recent purchase, vintage-dated
+EXTRA_BRUT
+TRADITIONAL
+Y
+
+# --- TEST 22 ---
+# Add bottle #5: Spirit - Glenmuir 12-Year Single Malt (Garage Overflow)
+3
+4
 SPIRIT
 Glenmuir
 12-Year Single Malt
 0
-1
+2
 750
 58.4
 85.00
@@ -168,8 +266,8 @@ WHISKEY
 Y
 12
 
-# --- TEST 17 ---
-# Add bottle #4: throwaway still wine, deleted later
+# --- TEST 23 ---
+# Add bottle #6: throwaway still wine, deleted later
 3
 1
 STILL_WINE
@@ -189,57 +287,57 @@ RED
 MEDIUM
 5
 
-# --- TEST 18 ---
+# --- TEST 24 ---
 # List all bottles (no filter)
 1
 1
 
-# --- TEST 19 ---
+# --- TEST 25 ---
 # List favorites & low stock
 2
 
-# --- TEST 20 ---
+# --- TEST 26 ---
 # View bottle detail: Domaine Leroux
 4
 1
 
-# --- TEST 21 ---
-# Edit bottle: Maison Belliard (sparkling wine)
+# --- TEST 27 ---
+# Edit bottle: Chateau Reynard (sparkling wine)
 5
-2
-3
+4
+4
 Y
-Restocked - keep at least one case on hand
-BRUT
+Turned out to be a lovely surprise, restocking
+EXTRA_BRUT
 
-# --- TEST 22 ---
-# Move bottle: Glenmuir (Cellar Fridge -> Wine Rack A)
+# --- TEST 28 ---
+# Move bottle: Glenmuir (Garage Overflow -> Basement Cave)
 6
+5
 3
-1
 
-# --- TEST 23 ---
+# --- TEST 29 ---
 # Consume bottle: Domaine Leroux, 1 bottle
 7
 1
 1
 
-# --- TEST 24 ---
+# --- TEST 30 ---
 # Delete bottle: throwaway (always last in the list)
 8
-4
+6
 Y
 
-# --- TEST 25 ---
+# --- TEST 31 ---
 # Back to Main Menu
 0
 
-# --- TEST 26 ---
+# --- TEST 32 ---
 # Main Menu -> Tastings
 3
 
-# --- TEST 27 ---
-# Log tasting: Domaine Leroux
+# --- TEST 33 ---
+# Log tasting: Domaine Leroux (1st tasting)
 1
 1
 2024-05-20
@@ -248,112 +346,155 @@ Excellent with a ribeye, tannins softened nicely
 Anniversary dinner
 1
 
-# --- TEST 28 ---
-# Log tasting: Maison Belliard
+# --- TEST 34 ---
+# Log tasting: Domaine Leroux (2nd tasting, tests the running-average display)
 1
-2
-2024-12-31
-88
-Crisp and celebratory
-New Year's Eve
+1
+2025-08-10
+90
+Still holding up beautifully, softening further with time
+Casual Sunday dinner
 1
 
-# --- TEST 29 ---
+# --- TEST 35 ---
+# Log tasting: Rosewood Ridge
+1
+2
+2024-11-02
+87
+Bright cherry notes, a touch thin on the finish
+Book club
+1
+
+# --- TEST 36 ---
+# Log tasting: Glenmuir
+1
+5
+2025-03-15
+95
+Incredible depth, will definitely rebuy
+Quiet night in
+1
+
+# --- TEST 37 ---
+# Log tasting: Chateau Reynard
+1
+4
+2026-08-01
+85
+Toasty and elegant, drinking beautifully already
+Small gathering
+1
+
+# --- TEST 38 ---
+# Log tasting: throwaway entry on Rosewood Ridge (2nd log on that bottle,
+# position 2 in its own list - deleted later, quantityConsumed 0 so it
+# doesn't touch the bottle's real quantity)
+1
+2
+2025-01-01
+50
+test entry - to be deleted
+test
+0
+
+# --- TEST 39 ---
 # View history by bottle: Domaine Leroux
 2
 1
 
-# --- TEST 30 ---
+# --- TEST 40 ---
 # View all tastings
 3
 
-# --- TEST 31 ---
+# --- TEST 41 ---
 # View top-rated
 4
 
-# --- TEST 32 ---
-# Delete tasting log: Domaine Leroux's only log
+# --- TEST 42 ---
+# Delete tasting log: Rosewood Ridge's throwaway entry (position 2 in its
+# own log list - its real tasting from TEST 35 stays at position 1)
 5
-1
-1
+2
+2
 
-# --- TEST 33 ---
+# --- TEST 43 ---
 # Back to Main Menu
 0
 
-# --- TEST 34 ---
+# --- TEST 44 ---
 # Main Menu -> Reports
 4
 
-# --- TEST 35 ---
+# --- TEST 45 ---
 # Cellar summary
 1
 
-# --- TEST 36 ---
+# --- TEST 46 ---
 # Drinking window report: Domaine Leroux
 2
 1
 
-# --- TEST 37 ---
+# --- TEST 47 ---
 # Tasting ratings by producer
 3
 
-# --- TEST 38 ---
+# --- TEST 48 ---
 # Low stock & favorites
 4
 
-# --- TEST 39 ---
+# --- TEST 49 ---
 # Storage conditions
 5
 
-# --- TEST 40 ---
+# --- TEST 50 ---
 # Back to Main Menu
 0
 
-# --- TEST 41 ---
+# --- TEST 51 ---
 # Main Menu -> Alerts
 5
 
-# --- TEST 42 ---
+# --- TEST 52 ---
 # View all alerts
 1
 
-# --- TEST 43 ---
+# --- TEST 53 ---
 # Peak window alerts
 2
 
-# --- TEST 44 ---
+# --- TEST 54 ---
 # Low stock alerts
 3
 
-# --- TEST 45 ---
+# --- TEST 55 ---
 # Storage condition alerts
 4
 
-# --- TEST 46 ---
+# --- TEST 56 ---
 # Back to Main Menu
 0
 
-# --- TEST 47 ---
+# --- TEST 57 ---
 # Main Menu -> Settings
 6
 
-# --- TEST 48 ---
+# --- TEST 58 ---
 # Change password (re-set to the same value so login still works next run)
 1
 password
 
-# --- TEST 49 ---
+# --- TEST 59 ---
 # Set favorite low-stock threshold
 2
 2
 
-# --- TEST 50 ---
+# --- TEST 60 ---
 # Set peak-window alert lead time
 3
 180
 
-# --- TEST 51 ---
+# --- TEST 61 ---
 # Add user: Test User
 4
 Test User
@@ -361,16 +502,16 @@ testuser
 testpass123
 USER
 
-# --- TEST 52 ---
+# --- TEST 62 ---
 # Delete user: testuser (cleans up the user just added)
 5
 testuser
 Y
 
-# --- TEST 53 ---
+# --- TEST 63 ---
 # Back to Main Menu
 0
 
-# --- TEST 54 ---
+# --- TEST 64 ---
 # Exit the application
 0

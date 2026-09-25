@@ -8,12 +8,14 @@ import io.corkline.model.CellarLocation;
 import io.corkline.model.ConditionReading;
 import io.corkline.repository.CellarLocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+@Component
 public class StorageConditionStrategy implements AlertStrategy {
     @Autowired
     private CellarLocationRepository cellarLocationRepository;

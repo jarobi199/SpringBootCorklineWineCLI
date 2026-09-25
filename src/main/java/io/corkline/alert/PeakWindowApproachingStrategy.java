@@ -7,12 +7,14 @@ import io.corkline.enums.BottleType;
 import io.corkline.interfaces.AlertStrategy;
 import io.corkline.model.Bottle;
 import io.corkline.model.DrinkingWindow;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class PeakWindowApproachingStrategy implements AlertStrategy {
     @Override
     public boolean supports(Bottle bottle) {

@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 
 @Component
 public class AlertManager {
+
     private final List<AlertStrategy> strategies;
+
     public AlertManager(List<AlertStrategy> strategies) {
         this.strategies = strategies;
     }

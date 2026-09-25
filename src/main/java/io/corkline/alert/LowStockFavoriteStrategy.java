@@ -5,10 +5,12 @@ import io.corkline.enums.AlertType;
 import io.corkline.enums.BottleStatus;
 import io.corkline.interfaces.AlertStrategy;
 import io.corkline.model.Bottle;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class LowStockFavoriteStrategy implements AlertStrategy {
     @Override
     public boolean supports(Bottle bottle) {
