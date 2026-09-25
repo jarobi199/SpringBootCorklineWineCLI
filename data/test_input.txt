@@ -1,0 +1,376 @@
+# ==================================================================
+# Corkline Wine & Spirits Cellar Manager -- test_input.txt
+# ==================================================================
+# Set InputHandler.DEBUG = true and point DEBUG_FILE at this file's
+# location before running.
+#
+# ASSUMES a seeded admin user "kanto" / "password" already exists in
+# your users collection (see AuthenticateMenu.initialize() -- note
+# that method is never actually called at startup, so this user only
+# exists if you created it some other way). If your real user differs,
+# edit the two lines under TEST 1 below to match, or the login loop
+# will never succeed and will corrupt every line after it.
+#
+# Lines starting with # are comments, skipped by InputHandler.
+# "# --- TEST N ---" lines are also skipped but print a
+# [DEBUG - STEP #N] marker in the console, for easy tracing.
+# ==================================================================
+
+# --- TEST 1 ---
+# Login
+kanto
+password
+
+# --- TEST 2 ---
+# Main Menu -> Locations
+2
+
+# --- TEST 3 ---
+# Add cellar location #1: Wine Rack A
+2
+Wine Rack A
+RACK
+10
+11
+14
+60
+75
+
+# --- TEST 4 ---
+# Add cellar location #2: Cellar Fridge
+2
+Cellar Fridge
+DISPLAY
+5
+12
+16
+55
+70
+
+# --- TEST 5 ---
+# Add cellar location #3: Temp Overflow Rack (throwaway, deleted later)
+2
+Temp Overflow Rack
+BIN
+4
+10
+15
+55
+70
+
+# --- TEST 6 ---
+# List all cellar locations
+1
+
+# --- TEST 7 ---
+# Record condition reading on Wine Rack A (in range)
+3
+1
+13
+68
+Weekly check - all normal
+
+# --- TEST 8 ---
+# Record condition reading on Wine Rack A (out of range - should trip a Storage Condition alert)
+3
+1
+20
+68
+Heater malfunction overnight
+
+# --- TEST 9 ---
+# View location detail: Wine Rack A
+4
+1
+
+# --- TEST 10 ---
+# Edit location: Cellar Fridge
+5
+2
+Cellar Fridge (Upstairs)
+6
+12
+16
+55
+70
+
+# --- TEST 11 ---
+# Delete cellar location: Temp Overflow Rack (throwaway, always last in the list)
+6
+3
+Y
+
+# --- TEST 12 ---
+# Back to Main Menu
+0
+
+# --- TEST 13 ---
+# Main Menu -> Bottles
+1
+
+# --- TEST 14 ---
+# Add bottle #1: Still wine - Domaine Leroux, Clos des Vignes 2018 (Wine Rack A)
+3
+1
+STILL_WINE
+Domaine Leroux
+Clos des Vignes
+2018
+6
+750
+14.5
+65.00
+2020-03-15
+N
+Cellar favorite - hold for a special occasion
+Cabernet Sauvignon
+Napa Valley
+RED
+FULL_BODIED
+12
+
+# --- TEST 15 ---
+# Add bottle #2: Sparkling wine - Maison Belliard Brut NV (Wine Rack A)
+3
+1
+SPARKLING_WINE
+Maison Belliard
+Brut
+0
+2
+750
+12.0
+42.00
+2022-11-01
+Y
+Good for celebrations
+BRUT
+TRADITIONAL
+N
+
+# --- TEST 16 ---
+# Add bottle #3: Spirit - Glenmuir 12-Year Single Malt (Cellar Fridge)
+3
+2
+SPIRIT
+Glenmuir
+12-Year Single Malt
+0
+1
+750
+58.4
+85.00
+2023-06-10
+N
+Cask strength, gift from a friend
+WHISKEY
+2012
+Y
+12
+
+# --- TEST 17 ---
+# Add bottle #4: throwaway still wine, deleted later
+3
+1
+STILL_WINE
+Temp Test Producer
+Temp Test Label
+2021
+1
+750
+13.0
+10.00
+2023-01-01
+N
+temporary - to be deleted
+Merlot
+Test Region
+RED
+MEDIUM
+5
+
+# --- TEST 18 ---
+# List all bottles (no filter)
+1
+1
+
+# --- TEST 19 ---
+# List favorites & low stock
+2
+
+# --- TEST 20 ---
+# View bottle detail: Domaine Leroux
+4
+1
+
+# --- TEST 21 ---
+# Edit bottle: Maison Belliard (sparkling wine)
+5
+2
+3
+Y
+Restocked - keep at least one case on hand
+BRUT
+
+# --- TEST 22 ---
+# Move bottle: Glenmuir (Cellar Fridge -> Wine Rack A)
+6
+3
+1
+
+# --- TEST 23 ---
+# Consume bottle: Domaine Leroux, 1 bottle
+7
+1
+1
+
+# --- TEST 24 ---
+# Delete bottle: throwaway (always last in the list)
+8
+4
+Y
+
+# --- TEST 25 ---
+# Back to Main Menu
+0
+
+# --- TEST 26 ---
+# Main Menu -> Tastings
+3
+
+# --- TEST 27 ---
+# Log tasting: Domaine Leroux
+1
+1
+2024-05-20
+92
+Excellent with a ribeye, tannins softened nicely
+Anniversary dinner
+1
+
+# --- TEST 28 ---
+# Log tasting: Maison Belliard
+1
+2
+2024-12-31
+88
+Crisp and celebratory
+New Year's Eve
+1
+
+# --- TEST 29 ---
+# View history by bottle: Domaine Leroux
+2
+1
+
+# --- TEST 30 ---
+# View all tastings
+3
+
+# --- TEST 31 ---
+# View top-rated
+4
+
+# --- TEST 32 ---
+# Delete tasting log: Domaine Leroux's only log
+5
+1
+1
+
+# --- TEST 33 ---
+# Back to Main Menu
+0
+
+# --- TEST 34 ---
+# Main Menu -> Reports
+4
+
+# --- TEST 35 ---
+# Cellar summary
+1
+
+# --- TEST 36 ---
+# Drinking window report: Domaine Leroux
+2
+1
+
+# --- TEST 37 ---
+# Tasting ratings by producer
+3
+
+# --- TEST 38 ---
+# Low stock & favorites
+4
+
+# --- TEST 39 ---
+# Storage conditions
+5
+
+# --- TEST 40 ---
+# Back to Main Menu
+0
+
+# --- TEST 41 ---
+# Main Menu -> Alerts
+5
+
+# --- TEST 42 ---
+# View all alerts
+1
+
+# --- TEST 43 ---
+# Peak window alerts
+2
+
+# --- TEST 44 ---
+# Low stock alerts
+3
+
+# --- TEST 45 ---
+# Storage condition alerts
+4
+
+# --- TEST 46 ---
+# Back to Main Menu
+0
+
+# --- TEST 47 ---
+# Main Menu -> Settings
+6
+
+# --- TEST 48 ---
+# Change password (re-set to the same value so login still works next run)
+1
+password
+
+# --- TEST 49 ---
+# Set favorite low-stock threshold
+2
+2
+
+# --- TEST 50 ---
+# Set peak-window alert lead time
+3
+180
+
+# --- TEST 51 ---
+# Add user: Test User
+4
+Test User
+testuser
+testpass123
+USER
+
+# --- TEST 52 ---
+# Delete user: testuser (cleans up the user just added)
+5
+testuser
+Y
+
+# --- TEST 53 ---
+# Back to Main Menu
+0
+
+# --- TEST 54 ---
+# Exit the application
+0
