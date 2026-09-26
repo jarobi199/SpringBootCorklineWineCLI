@@ -158,7 +158,7 @@ public class BottleMenu implements IMenu {
                         String region = InputHandler.getStringInput();
                         System.out.println("Enter the wine color (RED, WHITE, ROSE):");
                         WineColor wineColor = WineColor.valueOf(InputHandler.getStringInput().toUpperCase());
-                        System.out.println("Enter the wine body style (LIGHT, MEDIUM , FULL_BODIED):");
+                        System.out.println("Enter the wine body style (LIGHT, MEDIUM, FULL_BODIED):");
                         WineBodyStyle wineBodyStyle = WineBodyStyle.valueOf(InputHandler.getStringInput().toUpperCase());
                         System.out.println("Enter the aging potential years:");
                         int agingPotentialYears = InputHandler.getIntegerInput();
@@ -167,7 +167,7 @@ public class BottleMenu implements IMenu {
                         System.out.println("The still wine bottle has been added successfully!");
                     }
                     case SPARKLING_WINE -> {
-                        System.out.println("Select the dosage level (BRUT_NATURE, EXTRA_BRUT, BRUT, SEC , DEMI_SEC):");
+                        System.out.println("Select the dosage level (BRUT_NATURE, EXTRA_BRUT, BRUT, SEC, DEMI_SEC):");
                         DosageLevel dosageLevel = DosageLevel.valueOf(InputHandler.getStringInput().toUpperCase());
                         System.out.println("Select the production method (TRADITIONAL, CHARMAT):");
                         ProductionMethod productionMethod = ProductionMethod.valueOf(InputHandler.getStringInput().toUpperCase());

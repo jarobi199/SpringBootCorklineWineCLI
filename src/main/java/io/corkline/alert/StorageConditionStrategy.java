@@ -46,3 +46,4 @@ public class StorageConditionStrategy implements AlertStrategy {
     }
 
 }
+

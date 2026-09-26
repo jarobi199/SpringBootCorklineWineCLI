@@ -5,10 +5,12 @@ import io.corkline.enums.BottleType;
 import io.corkline.enums.DosageLevel;
 import io.corkline.enums.ProductionMethod;
 import io.corkline.interfaces.DrinkingWindowStrategy;
+import io.corkline.interfaces.ValuationStrategy;
 import io.corkline.window.EarlyPeakWindowStrategy;
 import org.springframework.data.annotation.Transient;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class SparklingWine extends Bottle {
     private DosageLevel dosageLevel;
@@ -16,6 +18,8 @@ public class SparklingWine extends Bottle {
     private boolean isVintage;
     @Transient
     private DrinkingWindowStrategy<SparklingWine> drinkingWindowStrategy;
+    @Transient
+    private ValuationStrategy<SparklingWine> valuationStrategy;
 
     public SparklingWine() {
         this.drinkingWindowStrategy = new EarlyPeakWindowStrategy();
@@ -77,5 +81,15 @@ public class SparklingWine extends Bottle {
     @Override
     public BottleType getBottleType() {
         return BottleType.SPARKLING_WINE;
+    }
+
+    @Override
+    public double calculateValuation() {
+        return valuationStrategy.calculate(this);
+    }
+
+    @Override
+    public List<String> getPairingSuggestions() {
+        return List.of();
     }
 }

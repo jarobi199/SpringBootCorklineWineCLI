@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Document(collection = "bottles")
 public abstract class Bottle {
@@ -178,4 +179,8 @@ public abstract class Bottle {
     public abstract DrinkingWindow calculateDrinkingWindow();
 
     public abstract BottleType getBottleType();
+
+    public abstract double calculateValuation();
+
+    public abstract List<String> getPairingSuggestions();
 }

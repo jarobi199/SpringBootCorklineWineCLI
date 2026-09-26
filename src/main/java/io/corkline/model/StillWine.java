@@ -9,6 +9,7 @@ import io.corkline.window.BellCurveWindowStrategy;
 import org.springframework.data.annotation.Transient;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class StillWine extends Bottle {
     private String varietal;
@@ -91,5 +92,15 @@ public class StillWine extends Bottle {
     @Override
     public BottleType getBottleType() {
         return BottleType.STILL_WINE;
+    }
+
+    @Override
+    public double calculateValuation() {
+        return 0;
+    }
+
+    @Override
+    public List<String> getPairingSuggestions() {
+        return List.of();
     }
 }

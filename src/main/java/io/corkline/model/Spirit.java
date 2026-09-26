@@ -8,6 +8,7 @@ import io.corkline.window.StableWindowStrategy;
 import org.springframework.data.annotation.Transient;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Spirit extends Bottle {
     private SpiritType spiritType;
@@ -78,5 +79,15 @@ public class Spirit extends Bottle {
     @Override
     public BottleType getBottleType() {
         return BottleType.SPIRIT;
+    }
+
+    @Override
+    public double calculateValuation() {
+        return 0;
+    }
+
+    @Override
+    public List<String> getPairingSuggestions() {
+        return List.of();
     }
 }
