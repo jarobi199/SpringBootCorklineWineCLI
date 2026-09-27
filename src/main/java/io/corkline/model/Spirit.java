@@ -4,6 +4,8 @@ import io.corkline.enums.BottleStatus;
 import io.corkline.enums.BottleType;
 import io.corkline.enums.SpiritType;
 import io.corkline.interfaces.DrinkingWindowStrategy;
+import io.corkline.interfaces.ValuationStrategy;
+import io.corkline.valuation.StableValuationStrategy;
 import io.corkline.window.StableWindowStrategy;
 import org.springframework.data.annotation.Transient;
 
@@ -17,9 +19,12 @@ public class Spirit extends Bottle {
     private int agedYears;
     @Transient
     private DrinkingWindowStrategy<Spirit> drinkingWindowStrategy;
+    @Transient
+    private ValuationStrategy<Spirit> valuationStrategy;
 
     public Spirit() {
         this.drinkingWindowStrategy = new StableWindowStrategy();
+        this.valuationStrategy = new StableValuationStrategy();
     }
 
     public Spirit(String userId, String locationId, String producer, String label, int vintageYear, int quantity, int bottleSize, double abv, double price, LocalDate purchaseDate,
@@ -83,7 +88,7 @@ public class Spirit extends Bottle {
 
     @Override
     public double calculateValuation() {
-        return 0;
+        return valuationStrategy.calculate(this);
     }
 
     @Override

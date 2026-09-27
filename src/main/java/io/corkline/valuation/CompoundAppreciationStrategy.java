@@ -8,8 +8,8 @@ import java.time.temporal.ChronoUnit;
 
 public class CompoundAppreciationStrategy implements ValuationStrategy<StillWine> {
     @Override
-    public double calculate(StillWine bottle) {
-        long yearsSincePurchase = ChronoUnit.YEARS.between(bottle.getPurchaseDate(), LocalDate.now());
-        return bottle.getPrice() * Math.pow(1.08, yearsSincePurchase);
+    public double calculate(StillWine stillWine) {
+        long yearsSincePurchase = ChronoUnit.YEARS.between(stillWine.getPurchaseDate(), LocalDate.now());
+        return stillWine.getPrice() * Math.pow(1.08, yearsSincePurchase);
     }
 }

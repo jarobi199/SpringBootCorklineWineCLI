@@ -5,6 +5,8 @@ import io.corkline.enums.BottleType;
 import io.corkline.enums.WineBodyStyle;
 import io.corkline.enums.WineColor;
 import io.corkline.interfaces.DrinkingWindowStrategy;
+import io.corkline.interfaces.ValuationStrategy;
+import io.corkline.valuation.CompoundAppreciationStrategy;
 import io.corkline.window.BellCurveWindowStrategy;
 import org.springframework.data.annotation.Transient;
 
@@ -19,9 +21,12 @@ public class StillWine extends Bottle {
     private int agingPotentialYears;
     @Transient
     private DrinkingWindowStrategy<StillWine>  drinkingWindowStrategy;
+    @Transient
+    private ValuationStrategy<StillWine> valuationStrategy;
 
     public StillWine() {
         this.drinkingWindowStrategy = new BellCurveWindowStrategy();
+        this.valuationStrategy = new CompoundAppreciationStrategy();
     }
 
     public StillWine(String userId, String locationId, String producer, String label, int vintageYear, int quantity, int bottleSize, double abv, double price, LocalDate purchaseDate, boolean isFavorite,
@@ -96,7 +101,7 @@ public class StillWine extends Bottle {
 
     @Override
     public double calculateValuation() {
-        return 0;
+        return valuationStrategy.calculate(this);
     }
 
     @Override

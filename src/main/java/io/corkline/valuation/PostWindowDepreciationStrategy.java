@@ -9,17 +9,17 @@ import java.time.temporal.ChronoUnit;
 
 public class PostWindowDepreciationStrategy implements ValuationStrategy<SparklingWine>  {
     @Override
-    public double calculate(SparklingWine bottle) {
+    public double calculate(SparklingWine sparklingWine) {
         double currentValue =  0;
-        DrinkingWindow drinkingWindow = bottle.calculateDrinkingWindow();
+        DrinkingWindow drinkingWindow = sparklingWine.calculateDrinkingWindow();
         LocalDate peakStartYear = LocalDate.of(drinkingWindow.peakStartYear(), 1, 1);
         LocalDate peakEndYear = LocalDate.of(drinkingWindow.peakEndYear(), 1, 1);
         if(peakStartYear.minusDays(1).isBefore(LocalDate.now()) && LocalDate.now().isBefore(peakEndYear.plusDays(1))) {
-            currentValue = bottle.getPrice();
+            currentValue = sparklingWine.getPrice();
         }
         else if(LocalDate.now().isAfter(peakEndYear)) {
             long yearsPast = ChronoUnit.YEARS.between(LocalDate.now(), peakEndYear);
-            currentValue = bottle.getPrice() * Math.max(0.5, 1 - (0.05 * yearsPast));
+            currentValue = sparklingWine.getPrice() * Math.max(0.5, 1 - (0.05 * yearsPast));
         }
 
         return currentValue;

@@ -6,6 +6,7 @@ import io.corkline.enums.DosageLevel;
 import io.corkline.enums.ProductionMethod;
 import io.corkline.interfaces.DrinkingWindowStrategy;
 import io.corkline.interfaces.ValuationStrategy;
+import io.corkline.valuation.PostWindowDepreciationStrategy;
 import io.corkline.window.EarlyPeakWindowStrategy;
 import org.springframework.data.annotation.Transient;
 
@@ -23,6 +24,7 @@ public class SparklingWine extends Bottle {
 
     public SparklingWine() {
         this.drinkingWindowStrategy = new EarlyPeakWindowStrategy();
+        this.valuationStrategy = new PostWindowDepreciationStrategy();
     }
 
     public SparklingWine(String userId, String locationId, String producer, String label, int vintageYear, int quantity, int bottleSize, double abv, double price, LocalDate purchaseDate,
