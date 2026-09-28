@@ -54,4 +54,10 @@ public class UserService {
             System.out.println("User " + username + " has been deleted!");
         });
     }
+
+    public void setTastedRecentlyThreshold(int notTastedRecentlyThreshold) {
+        SessionContext.getUser().setNotTastedRecentlyThreshold(notTastedRecentlyThreshold);
+        userRepository.save(SessionContext.getUser());
+        System.out.println("The not tasted recently threshold has been set to " + notTastedRecentlyThreshold + ".");
+    }
 }

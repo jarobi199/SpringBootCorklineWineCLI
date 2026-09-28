@@ -14,6 +14,7 @@ public class User {
     private Role role;
     private int favoriteStockThreshold;
     private int peakAlertLeadDays;
+    private int notTastedRecentlyThreshold;
 
     public User() {
         //No argument constructor
@@ -26,6 +27,7 @@ public class User {
         this.role = role;
         this.favoriteStockThreshold = 2;
         this.peakAlertLeadDays = 180;
+        this.notTastedRecentlyThreshold = 3;
     }
 
     public String getId() {
@@ -83,4 +85,13 @@ public class User {
     public void setPeakAlertLeadDays(int peakAlertLeadDays) {
         this.peakAlertLeadDays = peakAlertLeadDays;
     }
+
+    public int getNotTastedRecentlyThreshold() {
+        return notTastedRecentlyThreshold;
+    }
+
+    public void setNotTastedRecentlyThreshold(int notTastedRecentlyThreshold) {
+        this.notTastedRecentlyThreshold = notTastedRecentlyThreshold;
+    }
+
 }

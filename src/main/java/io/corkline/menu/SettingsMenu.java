@@ -24,8 +24,9 @@ public class SettingsMenu implements IMenu {
                 case 1 -> changePassword();
                 case 2 -> setFavoriteStockThreshold();
                 case 3 -> setPeakAlertLeadDays();
-                case 4 -> addUser();
-                case 5 -> deleteUser();
+                case 4 -> setNotTastedRecentlyThreshold();
+                case 5 -> addUser();
+                case 6 -> deleteUser();
             }
         }
         while (choice != 0);
@@ -59,6 +60,12 @@ public class SettingsMenu implements IMenu {
         }
     }
 
+    public void setNotTastedRecentlyThreshold() {
+        System.out .println("Enter the not tasted recently threshold:");
+        int notTastedRecentlyThreshold = InputHandler.getIntegerInput();
+        userService.setTastedRecentlyThreshold(notTastedRecentlyThreshold);
+    }
+
     public void setFavoriteStockThreshold() {
         System.out .println("Enter the favorite stock threshold:");
         int favoriteStockThreshold = InputHandler.getIntegerInput();
@@ -82,9 +89,10 @@ public class SettingsMenu implements IMenu {
         System.out.println("[1] Change password");
         System.out.println("[2] Set favorite low-stock threshold");
         System.out.println("[3] Set peak-window alert lead time");
+        System.out.println("[4] Set not-tasted-recently threshold");
         if(verifyAdmin()) {
-            System.out.println("[4] Add user");
-            System.out.println("[5] Delete user");
+            System.out.println("[5] Add user");
+            System.out.println("[6] Delete user");
         }
         System.out.println("[0] Exit");
         System.out.println("Please make a selection:");
