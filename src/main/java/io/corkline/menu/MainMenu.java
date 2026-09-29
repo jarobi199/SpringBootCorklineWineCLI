@@ -57,9 +57,10 @@ public class MainMenu implements IMenu {
         System.out.println("[1] Bottles");
         System.out.println("[2] Locations");
         System.out.println("[3] Tastings");
-        System.out.println("[4] Reports");
-        System.out.println("[5] Alerts");
-        System.out.println("[6] Settings");
+        System.out.println("[4] Wishlist");
+        System.out.println("[5] Reports");
+        System.out.println("[6] Alerts");
+        System.out.println("[7] Settings");
         System.out.println("[0] Exit");
         System.out.println("Please make a selection:");
     }

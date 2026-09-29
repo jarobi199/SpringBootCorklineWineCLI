@@ -4,7 +4,9 @@ import io.corkline.enums.BottleStatus;
 import io.corkline.enums.BottleType;
 import io.corkline.enums.SpiritType;
 import io.corkline.interfaces.DrinkingWindowStrategy;
+import io.corkline.interfaces.PairingStrategy;
 import io.corkline.interfaces.ValuationStrategy;
+import io.corkline.pairings.SpiritPairingStrategy;
 import io.corkline.valuation.StableValuationStrategy;
 import io.corkline.window.StableWindowStrategy;
 import org.springframework.data.annotation.Transient;
@@ -21,10 +23,14 @@ public class Spirit extends Bottle {
     private DrinkingWindowStrategy<Spirit> drinkingWindowStrategy;
     @Transient
     private ValuationStrategy<Spirit> valuationStrategy;
+    @Transient
+    private PairingStrategy<Spirit> pairingStrategy;
+
 
     public Spirit() {
         this.drinkingWindowStrategy = new StableWindowStrategy();
         this.valuationStrategy = new StableValuationStrategy();
+        this.pairingStrategy = new SpiritPairingStrategy();
     }
 
     public Spirit(String userId, String locationId, String producer, String label, int vintageYear, int quantity, int bottleSize, double abv, double price, LocalDate purchaseDate,
@@ -93,6 +99,6 @@ public class Spirit extends Bottle {
 
     @Override
     public List<String> getPairingSuggestions() {
-        return List.of();
+        return pairingStrategy.suggestPairings(this);
     }
 }

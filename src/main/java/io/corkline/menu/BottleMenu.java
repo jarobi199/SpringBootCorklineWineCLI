@@ -236,7 +236,7 @@ public class BottleMenu implements IMenu {
 
         if(!bottles.isEmpty()) {
             for (Bottle b : bottles) {
-                System.out.println("[" + number + "] " +  b.getProducer() + " - " + b.getLabel());
+                System.out.println("[" + number + "] " +  b.getProducer() + " - " + b.getLabel() + " (" + b.getBottleType() + ")");
                 number++;
             }
             System.out.println("Select a bottle:");

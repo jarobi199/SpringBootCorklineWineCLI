@@ -5,7 +5,9 @@ import io.corkline.enums.BottleType;
 import io.corkline.enums.DosageLevel;
 import io.corkline.enums.ProductionMethod;
 import io.corkline.interfaces.DrinkingWindowStrategy;
+import io.corkline.interfaces.PairingStrategy;
 import io.corkline.interfaces.ValuationStrategy;
+import io.corkline.pairings.SparklingWinePairingStrategy;
 import io.corkline.valuation.PostWindowDepreciationStrategy;
 import io.corkline.window.EarlyPeakWindowStrategy;
 import org.springframework.data.annotation.Transient;
@@ -21,10 +23,13 @@ public class SparklingWine extends Bottle {
     private DrinkingWindowStrategy<SparklingWine> drinkingWindowStrategy;
     @Transient
     private ValuationStrategy<SparklingWine> valuationStrategy;
+    @Transient
+    private PairingStrategy<SparklingWine> pairingStrategy;
 
     public SparklingWine() {
         this.drinkingWindowStrategy = new EarlyPeakWindowStrategy();
         this.valuationStrategy = new PostWindowDepreciationStrategy();
+        this.pairingStrategy = new SparklingWinePairingStrategy();
     }
 
     public SparklingWine(String userId, String locationId, String producer, String label, int vintageYear, int quantity, int bottleSize, double abv, double price, LocalDate purchaseDate,
@@ -92,6 +97,6 @@ public class SparklingWine extends Bottle {
 
     @Override
     public List<String> getPairingSuggestions() {
-        return List.of();
+        return pairingStrategy.suggestPairings(this);
     }
 }

@@ -64,6 +64,7 @@ public class TastingMenu implements IMenu {
     public void logTasting() {
         Bottle bottle = bottleMenu.listBottlesAndSelect();
         if (bottle != null) {
+            System.out.println("Here are some food pairing suggestions as reference: " + bottle.getPairingSuggestions());
             System.out.println("Enter the tasting date (YYYY-MM-DD):");
             LocalDate tastingDate = InputHandler.getDateInput();
             System.out.println("Enter the rating (0-100):");

@@ -173,6 +173,7 @@ public abstract class Bottle {
                         "Is Favorite?: " + (isFavorite ? "Yes" : "No") + "\n" +
                         "Status: " + status + "\n" +
                         "Notes: " + notes + "\n" +
+                        "Food Pairing Suggestions: " + getPairingSuggestions() + "\n" +
                         "Drinking Window: " + calculateDrinkingWindow().peakStartYear() + " - " + calculateDrinkingWindow().peakEndYear() + "\n";
     }
 
