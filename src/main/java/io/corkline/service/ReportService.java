@@ -17,6 +17,7 @@ import io.github.kusoroadeolu.clique.configuration.TableType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -207,11 +208,12 @@ public class ReportService {
     }
 
     public void generateValuationReport(Bottle bottle) {
+        DecimalFormat df = new DecimalFormat("0.00");
         String bottleLabel = bottle.getLabel();
         double purchasePrice = bottle.getPrice();
         double currentValue = bottle.calculateValuation();
         double gainLossAmount = currentValue - purchasePrice;
-        double gainLossPercentage = gainLossAmount / currentValue;
+        double gainLossPercentage = gainLossAmount / purchasePrice *100;
         ValuationTrend valuationTrend = getValuationTrend(gainLossPercentage);
 
         ValuationReport valuationReport = new ValuationReport(bottleLabel, purchasePrice, currentValue, gainLossAmount, gainLossPercentage, valuationTrend);
@@ -224,7 +226,7 @@ public class ReportService {
                         "[yellow, bold]GAIN LOSS PERCENTAGE[/]",
                         "[yellow, bold]VALUATION TREND[/]"
                 )
-                .row(valuationReport.bottleLabel(), InputHandler.formatAsMoney(valuationReport.purchasePrice()),  InputHandler.formatAsMoney(valuationReport.currentValue()),  InputHandler.formatAsMoney(gainLossAmount), gainLossPercentage + "%",  valuationTrend.name())
+                .row(valuationReport.bottleLabel(), InputHandler.formatAsMoney(valuationReport.purchasePrice()),  InputHandler.formatAsMoney(valuationReport.currentValue()),  InputHandler.formatAsMoney(gainLossAmount), df.format(gainLossPercentage) + "%",  valuationTrend.name())
                 .render();
         System.out.println();
     }
