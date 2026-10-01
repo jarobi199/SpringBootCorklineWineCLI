@@ -1,6 +1,7 @@
 package io.corkline.service;
 
 import io.corkline.authentication.SessionContext;
+import io.corkline.enums.BottleStatus;
 import io.corkline.enums.BottleType;
 import io.corkline.enums.DrinkingWindowStatus;
 import io.corkline.model.*;
@@ -35,7 +36,7 @@ public class ReportService {
     private CellarLocationService cellarLocationService;
 
     public void generateCellarSummary() {
-        List<Bottle> bottles = bottleRepository.findByUserId(SessionContext.getUser().getId());
+        List<Bottle> bottles = bottleRepository.findByUserId(SessionContext.getUser().getId()).stream().filter(bottle -> BottleStatus.IN_CELLAR.equals(bottle.getStatus())).toList();
         int totalBottles = bottles.size();
 
         Set<String > uniqueLabels = new HashSet<>();
@@ -68,6 +69,38 @@ public class ReportService {
             barChart.bar(entry.getKey().name(), entry.getValue());
         }
         barChart.render();
+    }
+
+    public void generateCellarNetWorth() {
+        List<Bottle> bottles = bottleRepository.findByUserId(SessionContext.getUser().getId()).stream().filter(bottle -> BottleStatus.IN_CELLAR.equals(bottle.getStatus())).toList();
+        double totalPurchaseValue = bottles.stream().mapToDouble(Bottle::getPrice).sum();
+        double totalCurrentValue = bottles.stream().mapToDouble(Bottle::calculateValuation).sum();
+        double totalGainLoss = totalCurrentValue - totalPurchaseValue;
+
+        Map<BottleType, Double> valueByTypeMap = new HashMap<BottleType, Double>();
+        for(BottleType bottleType : BottleType.values()) {
+            double valueByType = bottles.stream().filter(bottle -> bottleType.equals(bottle.getBottleType())).mapToDouble(Bottle::calculateValuation).sum();
+            valueByTypeMap.put(bottleType, valueByType);
+        }
+
+        NetWorthSummary netWorthSummary = new NetWorthSummary(totalPurchaseValue, totalCurrentValue, totalGainLoss, valueByTypeMap);
+        System.out.println("| CELLAR NET WORTH |");
+        Clique.table(TableType.BOX_DRAW)
+                .headers(
+                        "[yellow, bold]TOTAL PURCHASE VALUE[/]",
+                        "[yellow, bold]TOTAL CURRENT VALUE[/]",
+                        "[yellow, bold]TOTAL GAIN/LOSS[/]"
+                )
+                .row(InputHandler.formatAsMoney(netWorthSummary.totalPurchaseValue()), InputHandler.formatAsMoney(netWorthSummary.totalCurrentValue()), InputHandler.formatAsMoney(netWorthSummary.totalGainLoss()))
+                .render();
+        System.out.println();
+
+        BarChartUtil.Builder barChart = BarChartUtil.builder().title("VALUE BY BOTTLE TYPE");
+        for (Map.Entry<BottleType, Double> entry : netWorthSummary.valueByType().entrySet()) {
+            barChart.bar(entry.getKey().name(), entry.getValue());
+        }
+        barChart.render();
+
     }
 
     public void generateDrinkingWindowReport(Bottle bottle) {

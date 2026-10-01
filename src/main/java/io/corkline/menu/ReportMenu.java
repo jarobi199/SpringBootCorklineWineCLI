@@ -26,9 +26,14 @@ public class ReportMenu implements IMenu {
                 case 3 -> tastingRatingsByProducer();
                 case 4 -> lowStockAndFavorites();
                 case 5 -> storageConditions();
+                case 6 -> cellarNetWorth();
             }
         }
         while (choice != 0);
+    }
+
+    public void cellarNetWorth() {
+        reportService.generateCellarNetWorth();
     }
 
     public void storageConditions() {
@@ -61,6 +66,8 @@ public class ReportMenu implements IMenu {
         System.out.println("[3] Tasting ratings by producer");
         System.out.println("[4] Low stock & favorites");
         System.out.println("[5] Storage conditions");
+        System.out.println("[6] Cellar net worth");
+        System.out.println("[7] Valuation report");
         System.out.println("[0] Back");
         System.out.println("Please make a selection:");
     }
