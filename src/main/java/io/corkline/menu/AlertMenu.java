@@ -24,6 +24,8 @@ public class AlertMenu implements IMenu {
                 case 2 -> viewPeakWindowAlerts();
                 case 3 -> viewLowStockAlerts();
                 case 4 -> viewStorageConditionsAlerts();
+                case 5 -> viewNotTastedRecentlyAlerts();
+                case 6 -> viewDuplicateLabelAlerts();
             }
         }
         while (choice != 0);
@@ -45,12 +47,22 @@ public class AlertMenu implements IMenu {
         alertService.displayAlerts(null);
     }
 
+    public void viewDuplicateLabelAlerts() {
+        alertService.displayAlerts(AlertType.DUPLICATE_LABEL);
+    }
+
+    public void viewNotTastedRecentlyAlerts() {
+        alertService.displayAlerts(AlertType.NOT_TASTED_RECENTLY);
+    }
+
     @Override
     public void printOptions() {
         System.out.println("[1] View all alerts");
         System.out.println("[2] Peak window alerts");
         System.out.println("[3] Low stock alerts");
         System.out.println("[4] Storage condition alerts");
+        System.out.println("[5] Not tasted recently alerts");
+        System.out.println("[6] Duplicate label alerts");
         System.out.println("[0] Exit");
         System.out.println("Please make a selection:");
     }
