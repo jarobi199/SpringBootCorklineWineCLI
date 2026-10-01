@@ -4,6 +4,7 @@ import io.corkline.authentication.SessionContext;
 import io.corkline.enums.BottleStatus;
 import io.corkline.enums.BottleType;
 import io.corkline.enums.DrinkingWindowStatus;
+import io.corkline.enums.ValuationTrend;
 import io.corkline.model.*;
 import io.corkline.repository.BottleRepository;
 import io.corkline.repository.CellarLocationRepository;
@@ -205,4 +206,39 @@ public class ReportService {
         }
     }
 
+    public void generateValuationReport(Bottle bottle) {
+        String bottleLabel = bottle.getLabel();
+        double purchasePrice = bottle.getPrice();
+        double currentValue = bottle.calculateValuation();
+        double gainLossAmount = currentValue - purchasePrice;
+        double gainLossPercentage = gainLossAmount / currentValue;
+        ValuationTrend valuationTrend = getValuationTrend(gainLossPercentage);
+
+        ValuationReport valuationReport = new ValuationReport(bottleLabel, purchasePrice, currentValue, gainLossAmount, gainLossPercentage, valuationTrend);
+        Clique.table(TableType.BOX_DRAW)
+                .headers(
+                        "[yellow, bold]BOTTLE LABEL[/]",
+                        "[yellow, bold]PURCHASE PRICE[/]",
+                        "[yellow, bold]CURRENT VALUE[/]",
+                        "[yellow, bold]GAIN/LOSS AMOUNT[/]",
+                        "[yellow, bold]GAIN LOSS PERCENTAGE[/]",
+                        "[yellow, bold]VALUATION TREND[/]"
+                )
+                .row(valuationReport.bottleLabel(), InputHandler.formatAsMoney(valuationReport.purchasePrice()),  InputHandler.formatAsMoney(valuationReport.currentValue()),  InputHandler.formatAsMoney(gainLossAmount), gainLossPercentage + "%",  valuationTrend.name())
+                .render();
+        System.out.println();
+    }
+
+    private ValuationTrend getValuationTrend(double gainLossPercentage) {
+        ValuationTrend valuationTrend = ValuationTrend.STABLE;
+
+        if (gainLossPercentage < 0) {
+            valuationTrend = ValuationTrend.DEPRECIATING;
+        }
+        else if (gainLossPercentage > 0) {
+            valuationTrend = ValuationTrend.APPRECIATING;
+        }
+
+        return valuationTrend;
+    }
 }

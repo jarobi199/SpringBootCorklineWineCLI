@@ -27,9 +27,17 @@ public class ReportMenu implements IMenu {
                 case 4 -> lowStockAndFavorites();
                 case 5 -> storageConditions();
                 case 6 -> cellarNetWorth();
+                case 7 -> valuationReport();
             }
         }
         while (choice != 0);
+    }
+
+    public void valuationReport() {
+        Bottle bottle = bottleMenu.listBottlesAndSelect();
+        if (bottle != null) {
+            reportService.generateValuationReport(bottle);
+        }
     }
 
     public void cellarNetWorth() {
