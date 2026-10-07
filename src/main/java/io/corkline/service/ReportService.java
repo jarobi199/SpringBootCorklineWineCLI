@@ -166,7 +166,7 @@ public class ReportService {
 
     public void generateLowStockAndFavorites() {
         List<Bottle> bottles = bottleRepository.findByUserId(SessionContext.getUser().getId()).stream()
-                .filter(bottle -> bottle.isFavorite() && (bottle.getQuantity() <= SessionContext.getUser().getFavoriteStockThreshold())).sorted(Comparator.comparing(Bottle::getQuantity)).toList();
+                .filter(bottle -> BottleStatus.IN_CELLAR.equals(bottle.getStatus()) && bottle.isFavorite() && (bottle.getQuantity() <= SessionContext.getUser().getFavoriteStockThreshold())).sorted(Comparator.comparing(Bottle::getQuantity)).toList();
         System.out.println("| LOW STOCK AND FAVORITES |");
         bottleService.displayBottles(bottles, true);
     }

@@ -68,6 +68,8 @@ public class WishlistMenu implements IMenu {
                     int bottleSize = InputHandler.getIntegerInput();
                     System.out.println("Enter the alcohol by volume (abv):");
                     double abv = InputHandler.getDoubleInput();
+                    System.out.println("Enter the price:");
+                    double price = InputHandler.getDoubleInput();
                     System.out.println("Enter the purchase date (YYYY-MM-DD):");
                     LocalDate purchaseDate = InputHandler.getDateInput();
                     System.out.println("Is this bottle a favorite? (Y/N):");
@@ -86,7 +88,7 @@ public class WishlistMenu implements IMenu {
                             System.out.println("Enter the aging potential years:");
                             int agingPotentialYears = InputHandler.getIntegerInput();
 
-                            bottleService.addStillWineBottle(cellarLocation, wishlistItem.getProducer(), wishlistItem.getLabel(), vintageYear, quantity, bottleSize, abv, wishlistItem.getTargetPrice(), purchaseDate, isFavorite, wishlistItem.getNotes(), varietal, region, wineColor, wineBodyStyle, agingPotentialYears);
+                            bottleService.addStillWineBottle(cellarLocation, wishlistItem.getProducer(), wishlistItem.getLabel(), vintageYear, quantity, bottleSize, abv, price, purchaseDate, isFavorite, wishlistItem.getNotes(), varietal, region, wineColor, wineBodyStyle, agingPotentialYears);
                             System.out.println("The still wine bottle has been added successfully!");
                         }
                         case SPARKLING_WINE -> {
@@ -97,7 +99,7 @@ public class WishlistMenu implements IMenu {
                             System.out.println("Is this wine vintage? (Y/N):");
                             boolean isVintage = InputHandler.getBooleanInput();
 
-                            bottleService.addSparklingWineBottle(cellarLocation, wishlistItem.getProducer(), wishlistItem.getLabel(), vintageYear, quantity, bottleSize, abv, wishlistItem.getTargetPrice(), purchaseDate, isFavorite, wishlistItem.getNotes(), dosageLevel, productionMethod, isVintage);
+                            bottleService.addSparklingWineBottle(cellarLocation, wishlistItem.getProducer(), wishlistItem.getLabel(), vintageYear, quantity, bottleSize, abv, price, purchaseDate, isFavorite, wishlistItem.getNotes(), dosageLevel, productionMethod, isVintage);
                             System.out.println("The sparkling wine bottle has been added successfully!");
                         }
                         case SPIRIT -> {
@@ -110,7 +112,7 @@ public class WishlistMenu implements IMenu {
                             System.out.println("Enter the number of aged years:");
                             int agedYears = InputHandler.getIntegerInput();
 
-                            bottleService.addSpiritBottle(cellarLocation, wishlistItem.getProducer(), wishlistItem.getLabel(), vintageYear, quantity, bottleSize, abv, wishlistItem.getTargetPrice(), purchaseDate, isFavorite, wishlistItem.getNotes(), spiritType, distillationYear, caskStrength, agedYears);
+                            bottleService.addSpiritBottle(cellarLocation, wishlistItem.getProducer(), wishlistItem.getLabel(), vintageYear, quantity, bottleSize, abv, price, purchaseDate, isFavorite, wishlistItem.getNotes(), spiritType, distillationYear, caskStrength, agedYears);
                             System.out.println("The spirit bottle has been added successfully!");
                         }
                     }

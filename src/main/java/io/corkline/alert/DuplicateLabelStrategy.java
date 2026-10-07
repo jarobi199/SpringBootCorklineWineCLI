@@ -32,7 +32,7 @@ public class DuplicateLabelStrategy implements AlertStrategy {
         List<Bottle> bottles = bottleRepository.findByUserId(SessionContext.getUser().getId())
                 .stream().filter(b -> BottleStatus.IN_CELLAR.equals(b.getStatus())).toList();
         for (Bottle b : bottles) {
-            if((b.getProducer().equals(bottle.getProducer())) && (b.getLabel().equals(bottle.getLabel())) && !b.getLocationId().equals(bottle.getLocationId())) {
+            if((b.getProducer().equals(bottle.getProducer())) && (b.getLabel().equals(bottle.getLabel())) && !b.getLocationId().equals(bottle.getLocationId()) && !bottle.equals(b)) {
                 CellarLocation cellarLocation = cellarLocationRepository.findById(b.getLocationId()).orElse(null);
                 results.add(new AlertResult(bottle, AlertType.DUPLICATE_LABEL, "This label is a duplicate and already exists in the following location: " + (cellarLocation != null ? cellarLocation.getName() : "")));
             }
