@@ -3,6 +3,7 @@ package io.corkline.service;
 import io.corkline.authentication.SessionContext;
 import io.corkline.enums.BottleType;
 import io.corkline.enums.WishlistPriority;
+import io.corkline.enums.WishlistStatus;
 import io.corkline.model.WishlistItem;
 import io.corkline.repository.WishlistItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,10 @@ public class WishlistService {
 
     public void deleteWishlistItem(WishlistItem wishlistItem) {
         wishlistItemRepository.delete(wishlistItem);
+    }
+
+    public void convertToBottle(WishlistItem wishlistItem) {
+        wishlistItem.setStatus(WishlistStatus.ACQUIRED);
+        wishlistItemRepository.save(wishlistItem);
     }
 }
