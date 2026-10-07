@@ -22,6 +22,8 @@ public class MainMenu implements IMenu {
     @Autowired
     private ReportMenu reportMenu;
     @Autowired
+    private WishlistMenu wishlistMenu;
+    @Autowired
     private GoodbyeMenu goodbyeMenu;
 
     public void show() {
@@ -40,6 +42,7 @@ public class MainMenu implements IMenu {
                 case 1 -> bottleMenu;
                 case 2 -> locationMenu;
                 case 3 -> tastingMenu;
+                case 4 -> wishlistMenu;
                 case 5 -> reportMenu;
                 case 6 -> alertMenu;
                 case 7 -> settingsMenu;
