@@ -55,6 +55,10 @@ public class TastingLogService {
         tastingLogTable.render();
     }
 
+    public List<TastingLog> findTastingLogsByBottleId(String bottleId) {
+        return tastingLogRepository.findByBottleId(bottleId).stream().sorted(Comparator.comparing(TastingLog::getTastingDate).reversed()).toList();
+    }
+
     public void viewHistoryByBottle(Bottle bottle) {
         List<TastingLog>  tastingLogs = tastingLogRepository.findByBottleId(bottle.getId()).stream().sorted(Comparator.comparing(TastingLog::getTastingDate).reversed()).toList();
         if (!tastingLogs.isEmpty()) {

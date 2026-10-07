@@ -32,13 +32,18 @@ public class WishlistMenu implements IMenu {
             printOptions();
             choice = InputHandler.getIntegerInput();
             switch (choice) {
-                case 1 -> addWishlistItem();
-                case 2 -> editWishlistItem();
-                case 3 -> convertToBottle();
-                case 4 -> deleteWishlistItem();
+                case 1 -> listAllWishlistItems();
+                case 2 -> addWishlistItem();
+                case 3 -> editWishlistItem();
+                case 4 -> convertToBottle();
+                case 5 -> deleteWishlistItem();
             }
         }
         while (choice != 0);
+    }
+
+    public void listAllWishlistItems() {
+        wishlistService.displayWishlistItems();
     }
 
     public void deleteWishlistItem() {
@@ -189,12 +194,14 @@ public class WishlistMenu implements IMenu {
 
         @Override
     public void printOptions() {
-        System.out.println("[1] Add wishlist item");
-        System.out.println("[2] Edit wishlist item");
-        System.out.println("[3] Convert to bottle");
-        System.out.println("[4] Delete wishlist item");
+        System.out.println("[1] List all wishlist items");
+        System.out.println("[2] Add wishlist item");
+        System.out.println("[3] Edit wishlist item");
+        System.out.println("[4] Convert to bottle");
+        System.out.println("[5] Delete wishlist item");
         System.out.println("[0] Back");
         System.out.println("Please make a selection:");
+
     }
 }
 

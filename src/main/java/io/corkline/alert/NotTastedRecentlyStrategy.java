@@ -29,7 +29,7 @@ public class NotTastedRecentlyStrategy implements AlertStrategy {
         List<AlertResult> results = new ArrayList<>();
         LocalDate date = bottle.getPurchaseDate();
 
-        TastingLog tastingLog =  tastingLogService.getMostRecentTastingLog();
+        TastingLog tastingLog =  tastingLogService.findTastingLogsByBottleId(bottle.getId()).getFirst();
         if (tastingLog != null) {
             date = tastingLog.getTastingDate();
         }

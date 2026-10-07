@@ -6,6 +6,10 @@ import io.corkline.enums.WishlistPriority;
 import io.corkline.enums.WishlistStatus;
 import io.corkline.model.WishlistItem;
 import io.corkline.repository.WishlistItemRepository;
+import io.corkline.util.InputHandler;
+import io.github.kusoroadeolu.clique.Clique;
+import io.github.kusoroadeolu.clique.components.Table;
+import io.github.kusoroadeolu.clique.configuration.TableType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,5 +44,32 @@ public class WishlistService {
     public void convertToBottle(WishlistItem wishlistItem) {
         wishlistItem.setStatus(WishlistStatus.ACQUIRED);
         wishlistItemRepository.save(wishlistItem);
+    }
+
+    public void displayWishlistItems() {
+        List<WishlistItem> wishlistItems = wishlistItemRepository.findByUserId(SessionContext.getUser().getId());
+        if(wishlistItems.isEmpty()){
+            System.out.println("There are no wishlist items found.");
+        }
+        else
+        {
+            System.out.println("| WISHLIST ITEMS |");
+            Table wishlistTable = Clique.table(TableType.BOX_DRAW)
+                    .headers(
+                            "[yellow, bold]PRODUCER[/]",
+                            "[yellow, bold]LABEL[/]",
+                            "[yellow, bold]BOTTLE TYPE[/]",
+                            "[yellow, bold]TARGET PRICE[/]",
+                            "[yellow, bold]PRIORITY[/]",
+                            "[yellow, bold]NOTES[/]",
+                            "[yellow, bold]DATE ADDED[/]",
+                            "[yellow, bold]STATUS[/]"
+                    );
+            for (WishlistItem wishlistItem : wishlistItems) {
+                wishlistTable.row(wishlistItem.getProducer(), wishlistItem.getLabel(), wishlistItem.getBottleType().name(), InputHandler.formatAsMoney(wishlistItem.getTargetPrice()), wishlistItem.getPriority().name(),
+                        wishlistItem.getNotes(), wishlistItem.getDateAdded().toString(), wishlistItem.getStatus().name());
+            }
+            wishlistTable.render();
+        }
     }
 }
