@@ -29,9 +29,9 @@ public class NotTastedRecentlyStrategy implements AlertStrategy {
         List<AlertResult> results = new ArrayList<>();
         LocalDate date = bottle.getPurchaseDate();
 
-        TastingLog tastingLog =  tastingLogService.findTastingLogsByBottleId(bottle.getId()).getFirst();
-        if (tastingLog != null) {
-            date = tastingLog.getTastingDate();
+        List<TastingLog> tastingLogs = tastingLogService.findTastingLogsByBottleId(bottle.getId());
+        if (!tastingLogs.isEmpty()) {
+            date = tastingLogs.getFirst().getTastingDate();
         }
 
         if(date.isBefore(LocalDate.now().minusYears(SessionContext.getUser().getNotTastedRecentlyThreshold()))) {
