@@ -1,0 +1,855 @@
+# ==================================================================
+# Corkline Wine & Spirits Cellar Manager -- Phase 2 test cases
+# ==================================================================
+# RUN THIS AFTER the Phase 1 test_input.txt has been executed. It builds
+# on the data that run left behind:
+#   Locations: 1 Wine Rack A, 2 Cellar Fridge (Upstairs), 3 Basement Cave,
+#              4 Garage Overflow
+#   Bottles:   1 Domaine Leroux, 2 Rosewood Ridge, 3 Maison Belliard,
+#              4 Chateau Reynard, 5 Glenmuir
+#   Tastings:  Domaine Leroux x2, Rosewood Ridge, Glenmuir, Chateau Reynard
+#   Wishlist:  empty
+# Selection numbers assume bottles and locations list in insertion order,
+# as they did in the Phase 1 run.
+#
+# NO LOGIN LINES. MainMenu now calls automaticLogin(), so there is no
+# username/password prompt. If you switch back to AuthenticateMenu.show(),
+# put kanto / password at the top.
+#
+# DATE-SENSITIVE: expected values assume a run date between 2026-09-22
+# and 2026-11-01. Valuation years and the not-tasted cutoffs move with
+# the date, and the 2-year check flips on 2026-11-02.
+#
+# New menu numbers: Main (Wishlist 4, Reports 5, Alerts 6, Settings 7),
+# Reports 6-7, Alerts 5-6, Settings 4-6, Wishlist 1-5.
+#
+# Lines starting with # are comments. "# --- TEST N ---" lines print a
+# [DEBUG - STEP #N] marker. Every EXPECT line is for checking the console
+# output by eye; the file itself asserts nothing.
+# ==================================================================
+
+# --- TEST 1 ---
+# Main Menu -> Wishlist (option 4 now, was Reports in Phase 1)
+4
+
+# --- TEST 2 ---
+# List all wishlist items on an EMPTY wishlist
+# EXPECT: 'There are no wishlist items found.'
+1
+
+# --- TEST 3 ---
+# Edit wishlist item on an EMPTY wishlist
+# EXPECT: 'There are no wishlist items available.' and NO further prompts (1 line only)
+3
+
+# --- TEST 4 ---
+# Convert to bottle on an EMPTY wishlist
+# EXPECT: 'There are no wishlist items available.' and NO further prompts
+4
+
+# --- TEST 5 ---
+# Delete wishlist item on an EMPTY wishlist
+# EXPECT: 'There are no wishlist items available.' and NO further prompts
+5
+
+# --- TEST 6 ---
+# Add wishlist item: Domaine Leroux / Clos des Vignes (STILL_WINE, HIGH)
+# Wishlist #1 (W-A). Same producer+label as the cellar bottle already on Wine Rack A:
+# W-A, W-B, W-C are all converted later to drive the DUPLICATE_LABEL tests.
+2
+Domaine Leroux
+Clos des Vignes
+STILL_WINE
+65.00
+Looking for another case
+2026-09-01
+HIGH
+
+# --- TEST 7 ---
+# Add wishlist item: Domaine Leroux / Clos des Vignes (STILL_WINE, MEDIUM)
+# Wishlist #2 (W-B)
+2
+Domaine Leroux
+Clos des Vignes
+STILL_WINE
+68.00
+Second copy for duplicate testing
+2026-09-02
+MEDIUM
+
+# --- TEST 8 ---
+# Add wishlist item: Domaine Leroux / Clos des Vignes (STILL_WINE, LOW)
+# Wishlist #3 (W-C)
+2
+Domaine Leroux
+Clos des Vignes
+STILL_WINE
+70.00
+Third copy for duplicate testing
+2026-09-03
+LOW
+
+# --- TEST 9 ---
+# Add wishlist item: Chateau Blanc / Chablis Premier Cru (STILL_WINE, MEDIUM)
+# Wishlist #4 (W-D) - becomes the WHITE / LIGHT pairing case
+2
+Chateau Blanc
+Chablis Premier Cru
+STILL_WINE
+45.00
+Crisp white for seafood
+2026-09-04
+MEDIUM
+
+# --- TEST 10 ---
+# Add wishlist item: Old Vine Estate / Reserve Zinfandel (STILL_WINE, LOW)
+# Wishlist #5 (W-E) - becomes the APPRECIATING valuation case
+2
+Old Vine Estate
+Reserve Zinfandel
+STILL_WINE
+100.00
+Older purchase date for the appreciation test
+2026-09-05
+LOW
+
+# --- TEST 11 ---
+# Add wishlist item: Maison Pelletier / Grande Cuvee (SPARKLING_WINE, LOW)
+# Wishlist #6 (W-F) - becomes the DEPRECIATING valuation case
+2
+Maison Pelletier
+Grande Cuvee
+SPARKLING_WINE
+60.00
+Past-window depreciation test
+2026-09-06
+LOW
+
+# --- TEST 12 ---
+# Add wishlist item: Old Cellar Cava / Gran Reserva (SPARKLING_WINE, LOW)
+# Wishlist #7 (W-G) - becomes the 50% floor valuation case
+2
+Old Cellar Cava
+Gran Reserva
+SPARKLING_WINE
+100.00
+50 percent depreciation floor test
+2026-09-07
+LOW
+
+# --- TEST 13 ---
+# Add wishlist item: Juniper and Co / London Dry Gin (SPIRIT, MEDIUM)
+# Wishlist #8 (W-H) - becomes the capacity-filling bottle for Tiny Shelf
+2
+Juniper and Co
+London Dry Gin
+SPIRIT
+38.00
+Gin pairing test
+2026-09-08
+MEDIUM
+
+# --- TEST 14 ---
+# Add wishlist item: Rose Hills / Provence Rose (STILL_WINE, LOW)
+# Wishlist #9 (W-I) - first conversion attempt is rejected for capacity
+2
+Rose Hills
+Provence Rose
+STILL_WINE
+28.00
+Rose pairing test
+2026-09-09
+LOW
+
+# --- TEST 15 ---
+# Add wishlist item: Chateau Margaux / Grand Vin (STILL_WINE, HIGH)
+# Wishlist #10 (W-J) - stays WANTED for the whole run (edited, never converted)
+2
+Chateau Margaux
+Grand Vin
+STILL_WINE
+650.00
+Waiting for the 2019 to come back in stock
+2026-09-10
+HIGH
+
+# --- TEST 16 ---
+# Add wishlist item: Temp Wishlist Item / Delete Me (SPIRIT, LOW)
+# Wishlist #11 (W-K) - throwaway, deleted below
+2
+Temp Wishlist Item
+Delete Me
+SPIRIT
+10.00
+throwaway - to be deleted
+2026-09-11
+LOW
+
+# --- TEST 17 ---
+# List all wishlist items
+# EXPECT: 11 items, all WANTED, each showing producer, label, type, target price, priority, notes, date added
+1
+
+# --- TEST 18 ---
+# Edit wishlist item #10 (Chateau Margaux): target price, priority, notes only
+# Selection list shows ALL items regardless of status; producer/label/bottleType are not prompted (immutable)
+3
+10
+600.00
+MEDIUM
+Price dropped - still waiting for the 2019
+
+# --- TEST 19 ---
+# Delete wishlist item #11 (the throwaway, always last in the list)
+5
+11
+
+# --- TEST 20 ---
+# List all wishlist items
+# EXPECT: 10 items. Chateau Margaux now 600.00 / MEDIUM / new notes, producer and label unchanged. Temp Wishlist Item gone.
+1
+
+# --- TEST 21 ---
+# Back to Main Menu
+0
+
+# --- TEST 22 ---
+# Main Menu -> Settings (option 7 now)
+7
+
+# --- TEST 23 ---
+# Set not-tasted-recently threshold = 2 years (new Settings option 4)
+# Set explicitly: a user seeded before Phase 2 may have this field at 0, which would make every bottle alert.
+4
+2
+
+# --- TEST 24 ---
+# Back to Main Menu
+0
+
+# --- TEST 25 ---
+# Main Menu -> Alerts (option 6 now)
+6
+
+# --- TEST 26 ---
+# Not tasted recently alerts, threshold 2 (new Alerts option 5)
+# EXPECT: exactly 1 alert - Maison Belliard / Brut. Never tasted, so it falls back to purchase date 2023-11-01.
+# This also proves a bottle with NO tasting logs does not crash the strategy.
+5
+
+# --- TEST 27 ---
+# Back to Main Menu
+0
+
+# --- TEST 28 ---
+# Main Menu -> Settings
+7
+
+# --- TEST 29 ---
+# Set not-tasted-recently threshold = 1 year
+4
+1
+
+# --- TEST 30 ---
+# Back to Main Menu
+0
+
+# --- TEST 31 ---
+# Main Menu -> Alerts
+6
+
+# --- TEST 32 ---
+# Not tasted recently alerts, threshold 1
+# EXPECT: 4 alerts - Domaine Leroux (last tasted 2025-08-10), Rosewood Ridge (2024-11-02),
+# Maison Belliard (never tasted), Glenmuir (2025-03-15). Chateau Reynard (2026-08-01) does NOT alert.
+5
+
+# --- TEST 33 ---
+# Back to Main Menu
+0
+
+# --- TEST 34 ---
+# Main Menu -> Tastings
+3
+
+# --- TEST 35 ---
+# Log tasting: Glenmuir, dated 2026-09-01, quantityConsumed 0
+# EXPECT before the prompts: 'Here are some food pairing suggestions as reference: [dark chocolate, blue cheese, charcuterie]'
+# Consumed = 0 on purpose: Glenmuir has quantity 1, and consuming it would flip it to CONSUMED and drop it
+# out of the alert for the wrong reason.
+1
+5
+2026-09-01
+94
+Smoother than I remembered
+Sunday evening
+0
+
+# --- TEST 36 ---
+# Back to Main Menu
+0
+
+# --- TEST 37 ---
+# Main Menu -> Alerts
+6
+
+# --- TEST 38 ---
+# Not tasted recently alerts, threshold 1, AFTER tasting Glenmuir
+# EXPECT: 3 alerts - Domaine Leroux, Rosewood Ridge, Maison Belliard. Glenmuir is gone.
+# This is the regression test for the bottle-scoping bug: tasting ONE bottle must not clear the others.
+5
+
+# --- TEST 39 ---
+# Back to Main Menu
+0
+
+# --- TEST 40 ---
+# Main Menu -> Settings
+7
+
+# --- TEST 41 ---
+# Set not-tasted-recently threshold = 5 years (kept for the rest of the run)
+4
+5
+
+# --- TEST 42 ---
+# Back to Main Menu
+0
+
+# --- TEST 43 ---
+# Main Menu -> Alerts
+6
+
+# --- TEST 44 ---
+# Not tasted recently alerts, threshold 5 (baseline cellar only)
+# EXPECT: 'No alerts found.' Every baseline bottle was tasted or bought within 5 years.
+5
+
+# --- TEST 45 ---
+# Back to Main Menu
+0
+
+# --- TEST 46 ---
+# Main Menu -> Wishlist
+4
+
+# --- TEST 47 ---
+# Convert W-A -> Cellar Fridge (location 2). Selection list shows only WANTED items; [1] is Domaine Leroux.
+# Prompts: item, location, vintage, qty, size, abv, ACTUAL price paid (70.00, not the 65.00 target),
+# purchase date, favorite, then still-wine fields. Creates bottle #6; W-A flips to ACQUIRED.
+4
+1
+2
+2021
+1
+750
+14.5
+70.00
+2026-09-10
+N
+Cabernet Sauvignon
+Napa Valley
+RED
+FULL_BODIED
+15
+
+# --- TEST 48 ---
+# Back to Main Menu
+0
+
+# --- TEST 49 ---
+# Main Menu -> Alerts
+6
+
+# --- TEST 50 ---
+# Duplicate label alerts (new Alerts option 6), stage 1
+# EXPECT: 2 alerts. Domaine Leroux on Wine Rack A names Cellar Fridge (Upstairs);
+# the new Domaine Leroux copy on Cellar Fridge names Wine Rack A.
+6
+
+# --- TEST 51 ---
+# Back to Main Menu
+0
+
+# --- TEST 52 ---
+# Main Menu -> Wishlist
+4
+
+# --- TEST 53 ---
+# Convert W-B -> Cellar Fridge. W-A is ACQUIRED now, so W-B is [1] in the convert list. Creates bottle #7.
+4
+1
+2
+2021
+1
+750
+14.5
+72.00
+2026-09-12
+N
+Cabernet Sauvignon
+Napa Valley
+RED
+FULL_BODIED
+15
+
+# --- TEST 54 ---
+# Back to Main Menu
+0
+
+# --- TEST 55 ---
+# Main Menu -> Alerts
+6
+
+# --- TEST 56 ---
+# Duplicate label alerts, stage 2 (two copies together on Cellar Fridge)
+# EXPECT: 3 alerts, NOT 4. The Wine Rack A bottle gets ONE alert for Cellar Fridge even though two bottles are there.
+# Each Cellar Fridge copy gets one alert for Wine Rack A. Same-location neighbours are not flagged.
+6
+
+# --- TEST 57 ---
+# Back to Main Menu
+0
+
+# --- TEST 58 ---
+# Main Menu -> Wishlist
+4
+
+# --- TEST 59 ---
+# Convert W-C -> Basement Cave (location 3). Creates bottle #8 (a third location).
+4
+1
+3
+2021
+1
+750
+14.5
+75.00
+2026-09-14
+N
+Cabernet Sauvignon
+Napa Valley
+RED
+FULL_BODIED
+15
+
+# --- TEST 60 ---
+# Back to Main Menu
+0
+
+# --- TEST 61 ---
+# Main Menu -> Alerts
+6
+
+# --- TEST 62 ---
+# Duplicate label alerts, stage 3 (three locations)
+# EXPECT: 8 alerts - each of the four Domaine Leroux bottles alerts once for each OTHER location that holds the wine (2 each).
+6
+
+# --- TEST 63 ---
+# Back to Main Menu
+0
+
+# --- TEST 64 ---
+# Main Menu -> Bottles
+1
+
+# --- TEST 65 ---
+# Consume bottle #8 (the Basement Cave copy), amount 1 -> quantity 0 -> status CONSUMED
+# The bottle list includes consumed bottles, so indexes do not shift.
+7
+8
+1
+
+# --- TEST 66 ---
+# Back to Main Menu
+0
+
+# --- TEST 67 ---
+# Main Menu -> Alerts
+6
+
+# --- TEST 68 ---
+# Duplicate label alerts after the Basement Cave copy is CONSUMED
+# EXPECT: back to 3 alerts. A consumed bottle no longer counts as a duplicate (IN_CELLAR filter).
+6
+
+# --- TEST 69 ---
+# Back to Main Menu
+0
+
+# --- TEST 70 ---
+# Main Menu -> Wishlist
+4
+
+# --- TEST 71 ---
+# Convert W-D (Chablis) -> Garage Overflow (location 4). Bottle #9: WHITE / LIGHT.
+4
+1
+4
+2022
+2
+750
+12.5
+45.00
+2026-09-15
+N
+Chardonnay
+Chablis
+WHITE
+LIGHT
+6
+
+# --- TEST 72 ---
+# Convert W-E (Zinfandel) -> Garage Overflow. Bottle #10, purchased 2020-01-15 for the appreciation test.
+4
+1
+4
+2015
+2
+750
+15.0
+100.00
+2020-01-15
+N
+Zinfandel
+Lodi
+RED
+FULL_BODIED
+10
+
+# --- TEST 73 ---
+# Convert W-F (Grande Cuvee) -> Garage Overflow. Bottle #11: vintage-dated 2018, window 2019-2022 (long closed).
+4
+1
+4
+2018
+1
+750
+12.0
+60.00
+2019-12-01
+N
+SEC
+TRADITIONAL
+Y
+
+# --- TEST 74 ---
+# Convert W-G (Gran Reserva) -> Garage Overflow. Bottle #12: vintage-dated 2005, window 2006-2009.
+4
+1
+4
+2005
+1
+750
+11.5
+100.00
+2008-06-01
+N
+DEMI_SEC
+TRADITIONAL
+Y
+
+# --- TEST 75 ---
+# Back to Main Menu
+0
+
+# --- TEST 76 ---
+# Main Menu -> Locations
+2
+
+# --- TEST 77 ---
+# Add cellar location: Tiny Shelf, capacity 1 (becomes location 5)
+# Created with NO condition readings - the storage alert must skip it safely.
+2
+Tiny Shelf
+BIN
+1
+10
+15
+55
+70
+
+# --- TEST 78 ---
+# Back to Main Menu
+0
+
+# --- TEST 79 ---
+# Main Menu -> Wishlist
+4
+
+# --- TEST 80 ---
+# Convert W-H (Gin) -> Tiny Shelf (location 5). Bottle #13. Fills Tiny Shelf to 1 of 1.
+4
+1
+5
+0
+1
+750
+41.0
+38.00
+2026-09-20
+N
+GIN
+2022
+N
+0
+
+# --- TEST 81 ---
+# Convert W-I (Rose) -> Tiny Shelf: capacity rejection. Only 3 inputs; no field prompts follow.
+# EXPECT: 'The selected location does not have any capacity.' W-I stays WANTED.
+4
+1
+5
+
+# --- TEST 82 ---
+# Convert W-I (still [1] after the rejection) -> Basement Cave. Bottle #14: ROSE / LIGHT.
+4
+1
+3
+2025
+1
+750
+12.5
+28.00
+2026-09-22
+N
+Grenache Blend
+Provence
+ROSE
+LIGHT
+2
+
+# --- TEST 83 ---
+# Convert attempt on the last WANTED item into the full Tiny Shelf
+# EXPECT: the selection list shows ONLY [1] Chateau Margaux - Grand Vin, because the nine ACQUIRED items are excluded.
+# Then the capacity rejection. Chateau Margaux stays WANTED.
+4
+1
+5
+
+# --- TEST 84 ---
+# List all wishlist items
+# EXPECT: 10 items - nine ACQUIRED (A through I) and Chateau Margaux WANTED.
+1
+
+# --- TEST 85 ---
+# Delete wishlist item #1 (W-A, an ACQUIRED item)
+# Deleting the wishlist record must not touch the bottle it became.
+5
+1
+
+# --- TEST 86 ---
+# List all wishlist items
+# EXPECT: 9 items, Domaine Leroux 65.00 target gone, Chateau Margaux still WANTED.
+1
+
+# --- TEST 87 ---
+# Back to Main Menu
+0
+
+# --- TEST 88 ---
+# Main Menu -> Bottles
+1
+
+# --- TEST 89 ---
+# List all bottles (no filter)
+# EXPECT: 14 bottles, indexes below. Bottle #6 (the Domaine Leroux copy from the deleted wishlist item) still exists.
+# #1 Domaine Leroux, #2 Rosewood Ridge, #3 Maison Belliard, #4 Chateau Reynard, #5 Glenmuir,
+# #6-#8 Domaine Leroux copies (#8 CONSUMED), #9 Chablis, #10 Zinfandel, #11 Grande Cuvee, #12 Gran Reserva, #13 Gin, #14 Rose
+1
+1
+
+# --- TEST 90 ---
+# View bottle detail #1: Domaine Leroux (RED / FULL_BODIED)
+# EXPECT 'Food Pairing Suggestions: [grilled red meat, aged hard cheeses, dishes with rich, fatty sauces]'
+4
+1
+
+# --- TEST 91 ---
+# View bottle detail #2: Rosewood Ridge (RED / MEDIUM)
+# EXPECT 'Food Pairing Suggestions: [grilled red meat, aged hard cheeses, roasted vegetables]'
+4
+2
+
+# --- TEST 92 ---
+# View bottle detail #3: Maison Belliard (BRUT)
+# EXPECT 'Food Pairing Suggestions: [oysters, fried food, salty snacks]'
+4
+3
+
+# --- TEST 93 ---
+# View bottle detail #4: Chateau Reynard (EXTRA_BRUT)
+# EXPECT 'Food Pairing Suggestions: [grilled seafood, goat cheese, smoked salmon]'
+4
+4
+
+# --- TEST 94 ---
+# View bottle detail #5: Glenmuir (WHISKEY)
+# EXPECT 'Food Pairing Suggestions: [dark chocolate, blue cheese, charcuterie]'
+4
+5
+
+# --- TEST 95 ---
+# View bottle detail #9: Chablis (WHITE / LIGHT)
+# EXPECT 'Food Pairing Suggestions: [roast chicken, soft cheeses, delicate, lighter fare]'
+4
+9
+
+# --- TEST 96 ---
+# View bottle detail #11: Grande Cuvee (SEC)
+# EXPECT 'Food Pairing Suggestions: [spicy Thai curry, glazed pork belly, mature cheddar]'
+4
+11
+
+# --- TEST 97 ---
+# View bottle detail #12: Gran Reserva (DEMI_SEC)
+# EXPECT 'Food Pairing Suggestions: [fruit tarts, foie gras, blue cheese]'
+4
+12
+
+# --- TEST 98 ---
+# View bottle detail #13: London Dry Gin (GIN)
+# EXPECT 'Food Pairing Suggestions: [smoked salmon, cucumber sandwiches, goat cheese]'
+4
+13
+
+# --- TEST 99 ---
+# View bottle detail #14: Provence Rose (ROSE / LIGHT)
+# EXPECT 'Food Pairing Suggestions: [charcuterie, light salads, delicate, lighter fare]'
+4
+14
+
+# --- TEST 100 ---
+# NOT COVERED by this file: BRUT_NATURE, BRANDY, RUM, TEQUILA, OTHER pairing branches, and WHITE/ROSE with MEDIUM or FULL_BODIED.
+# Back to Main Menu
+0
+
+# --- TEST 101 ---
+# Main Menu -> Reports (option 5 now)
+5
+
+# --- TEST 102 ---
+# Valuation report (new Reports option 7): bottle #1 - Domaine Leroux, bought 2022-03-15 at 65.00, 4 full years held
+# EXPECT current ~88.43, gain +23.43 (~+36.05%), APPRECIATING  [65 x 1.08^4]
+7
+1
+
+# --- TEST 103 ---
+# Valuation report (new Reports option 7): bottle #2 - Rosewood Ridge, bought 2021-05-01 at 38.00, 5 years held
+# EXPECT current ~55.83, gain +17.83 (~+46.93%), APPRECIATING  [38 x 1.08^5]
+7
+2
+
+# --- TEST 104 ---
+# Valuation report (new Reports option 7): bottle #3 - Maison Belliard NV, inside its 2024-2027 window
+# EXPECT current 42.00, gain 0.00 (0%), STABLE
+7
+3
+
+# --- TEST 105 ---
+# Valuation report (new Reports option 7): bottle #4 - Chateau Reynard, vintage 2026, window opens 2027 (BEFORE the window)
+# EXPECT current 55.00, gain 0.00 (0%), STABLE. Regression test: this used to fall through to 0.00.
+7
+4
+
+# --- TEST 106 ---
+# Valuation report (new Reports option 7): bottle #5 - Glenmuir, spirit
+# EXPECT current 85.00, gain 0.00 (0%), STABLE
+7
+5
+
+# --- TEST 107 ---
+# Valuation report (new Reports option 7): bottle #10 - Zinfandel, bought 2020-01-15 at 100.00, 6 years held
+# EXPECT current ~158.69, gain +58.69 (~+58.69%), APPRECIATING  [100 x 1.08^6]
+7
+10
+
+# --- TEST 108 ---
+# Valuation report (new Reports option 7): bottle #11 - Grande Cuvee, window ended 2022-01-01, 4 years past
+# EXPECT current 48.00, gain -12.00 (-20.00%), DEPRECIATING  [60 x (1 - 0.05 x 4)]
+7
+11
+
+# --- TEST 109 ---
+# Valuation report (new Reports option 7): bottle #12 - Gran Reserva, window ended 2009-01-01, 17 years past
+# EXPECT current 50.00, gain -50.00 (-50.00%), DEPRECIATING. The 50% floor holds: 1 - 0.05 x 17 = 0.15 floors to 0.5.
+7
+12
+
+# --- TEST 110 ---
+# Cellar net worth (new Reports option 6)
+# EXPECT (IN_CELLAR bottles only, so consumed #8 is excluded; each bottle record counts once, not times quantity):
+#   total purchase value ~798.00, total current value ~835.95, gain ~+37.95
+#   value by type: STILL_WINE ~517.95, SPARKLING_WINE 195.00, SPIRIT 123.00
+6
+
+# --- TEST 111 ---
+# Back to Main Menu
+0
+
+# --- TEST 112 ---
+# Main Menu -> Alerts
+6
+
+# --- TEST 113 ---
+# View all alerts
+# EXPECT 18 rows: 4 peak window + 1 low stock + 7 storage condition + 3 not tasted recently + 3 duplicate label.
+1
+
+# --- TEST 114 ---
+# Peak window alerts. EXPECT 4: Domaine Leroux x3 (#1, #6, #7) and Chateau Reynard. The consumed #8 is excluded.
+2
+
+# --- TEST 115 ---
+# Low stock alerts. EXPECT 1: Maison Belliard (favorite, quantity 1).
+3
+
+# --- TEST 116 ---
+# Storage condition alerts. EXPECT 7: Wine Rack A bottles #1 and #3 get 2 each (temperature and humidity),
+# Basement Cave bottles #4, #5, #14 get 1 each (humidity). Tiny Shelf has no readings and is skipped without error.
+4
+
+# --- TEST 117 ---
+# Not tasted recently alerts, threshold 5. EXPECT 3: Zinfandel (bought 2020-01-15), Grande Cuvee (2019-12-01),
+# Gran Reserva (2008-06-01). All never tasted, so the purchase-date fallback applies to newly converted bottles too.
+5
+
+# --- TEST 118 ---
+# Duplicate label alerts. EXPECT 3: Domaine Leroux #1, #6, #7.
+6
+
+# --- TEST 119 ---
+# Back to Main Menu
+0
+
+# --- TEST 120 ---
+# Main Menu -> Settings
+7
+
+# --- TEST 121 ---
+# Reset not-tasted-recently threshold to the default of 3
+4
+3
+
+# --- TEST 122 ---
+# Add user (now Settings option 5, was 4): Test User
+5
+Test User
+testuser
+testpass123
+USER
+
+# --- TEST 123 ---
+# Delete user (now Settings option 6, was 5): testuser
+6
+testuser
+Y
+
+# --- TEST 124 ---
+# Back to Main Menu
+0
+
+# --- TEST 125 ---
+# Exit the application
+0
