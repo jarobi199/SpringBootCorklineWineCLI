@@ -102,8 +102,4 @@ public class TastingLogService {
         tastingLogRepository.delete(tastingLog);
     }
 
-    public TastingLog getMostRecentTastingLog() {
-        return tastingLogRepository.findByUserIdOrderByTastingDateDesc(SessionContext.getUser().getId()).stream().findFirst().orElse(null);
-    }
-
 }
